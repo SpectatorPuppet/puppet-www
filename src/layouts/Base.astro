@@ -1,0 +1,48 @@
+---
+const { title, description, path = '/' } = Astro.props;
+const site = Astro.site ?? new URL('https://example.com');
+const canonical = new URL(path, site).href;
+---
+<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>{title}</title><meta name="description" content={description}><link rel="canonical" href={canonical}>
+<meta property="og:title" content={title}><meta property="og:description" content={description}><meta property="og:url" content={canonical}><meta property="og:type" content="website"><meta name="twitter:card" content="summary_large_image">
+<link rel="sitemap" href="/sitemap-index.xml">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin><link href="https://fonts.googleapis.com/css2?family=Archivo:wght@600;800&family=IBM+Plex+Sans:wght@400;500;600&display=swap" rel="stylesheet">
+<slot name="head" />
+<style is:global>
+:root{--ch:#2A2A2A;--si:#C0C0C0;--red:#E10600;--bg:#F6F6F4;--mu:#5c5c5c}
+*{box-sizing:border-box}body{margin:0;background:var(--bg);color:var(--ch);font:16px/1.6 "IBM Plex Sans",sans-serif}
+h1,h2,h3{font-family:Archivo,sans-serif;line-height:1.15;margin:0 0 .5rem}h2{font-size:clamp(26px,3.4vw,38px)}
+.w{max-width:1160px;margin:auto;padding:0 20px}a{color:inherit}
+header{background:var(--ch);color:#fff;position:sticky;top:0;z-index:3}header .w{display:flex;align-items:center;gap:22px;height:66px}
+.logo{font:800 24px Archivo;text-decoration:none}.logo i{color:var(--red);font-style:normal}nav{display:flex;gap:22px;font-size:15px}nav a{color:var(--si);text-decoration:none}.sp{flex:1}
+.btn{display:inline-flex;align-items:center;justify-content:center;background:var(--red);color:#fff;padding:12px 22px;border-radius:8px;font-weight:600;text-decoration:none;min-height:46px}
+.gh{background:transparent;border:1px solid var(--si);color:#fff}.dk .gh{color:var(--ch);border-color:var(--ch)}
+.burger{display:none;width:44px;height:44px;border:1px solid #555;border-radius:8px;background:none;color:#fff;font-size:20px}
+.hero{background:var(--ch);color:#fff}.hero .w{display:grid;grid-template-columns:1.1fr 1fr;gap:40px;align-items:center;padding:80px 20px 96px}
+.hero h1{font-size:clamp(36px,5.4vw,62px)}.hero p{color:var(--si);font-size:19px;max-width:34em}.row{display:flex;gap:12px;flex-wrap:wrap;margin:24px 0}
+.trust{font-size:14px;color:var(--si)}.trust b{color:#fff}
+.logos{background:#fff;padding:24px 0}.logos .w{display:flex;flex-wrap:wrap;gap:36px;justify-content:center;color:#999;font:600 18px Archivo}
+section{padding:80px 0}.lead{color:var(--mu);font-size:18px;max-width:40em;margin-bottom:32px}
+.g{display:grid;grid-template-columns:repeat(3,1fr);gap:20px}.g4{grid-template-columns:repeat(4,1fr)}
+.c{background:#fff;border-radius:14px;padding:26px;border:1px solid #e2e2e2}.c p{color:var(--mu);margin:0}
+.ic{width:44px;height:44px;border-radius:12px;background:var(--ch);display:grid;place-items:center;margin-bottom:14px}.ic svg{width:22px;height:22px}
+.c a.more{display:inline-block;margin-top:12px;color:var(--red);font-weight:600;text-decoration:none}
+.split{display:grid;grid-template-columns:1fr 1fr;gap:48px;align-items:center}.split ul{padding-left:20px}.split li{margin:6px 0}
+.mock{background:var(--ch);border-radius:16px;padding:14px;aspect-ratio:4/3;display:grid;grid-template-columns:70px 1fr;gap:10px}
+.mock div{background:#3a3a3a;border-radius:8px}.mock .m2{background:#fff;display:grid;gap:8px;padding:12px;grid-template-rows:24px repeat(4,1fr)}.mock .m2 span{background:#eee;border-radius:6px}.mock .m2 span:first-child{background:var(--red);width:40%}
+.steps .n{font:800 40px Archivo;color:var(--red)}
+.dark{background:var(--ch);color:#fff}.dark .c{background:#333;border-color:#444;color:#fff}.dark .c p,.dark .lead{color:var(--si)}
+.stat{font:800 44px Archivo;color:var(--red)}
+.q{font-size:17px}.q cite{display:block;margin-top:12px;font-style:normal;font-weight:600;color:var(--ch)}
+.pr .hot{border:2px solid var(--red);position:relative}.pr .hot:before{content:"Most popular";position:absolute;top:-12px;left:20px;background:var(--red);color:#fff;font-size:12px;padding:2px 10px;border-radius:10px}
+.price{font:800 40px Archivo}.price small{font:400 15px "IBM Plex Sans";color:var(--mu)}.pr ul{padding-left:18px;color:var(--mu)}
+details{background:#fff;border:1px solid #e2e2e2;border-radius:12px;padding:16px 20px;margin-bottom:10px}summary{font-weight:600;cursor:pointer}
+.cta{background:var(--red);color:#fff;border-radius:20px;padding:56px 24px;text-align:center}.cta .btn{background:var(--ch)}
+.stores{display:flex;gap:10px;justify-content:center;margin-top:16px}.stores span{border:1px solid #fff;border-radius:8px;padding:8px 14px;font-size:13px}
+footer{background:var(--ch);color:var(--si);padding:56px 0 24px;font-size:14px}footer .g{grid-template-columns:2fr repeat(4,1fr)}footer h3{color:#fff;font-size:15px}footer a{display:block;text-decoration:none;margin:6px 0}
+.legal{border-top:1px solid #444;margin-top:32px;padding-top:16px;display:flex;justify-content:space-between;flex-wrap:wrap;gap:8px}
+@media (max-width:1000px){.g4{grid-template-columns:repeat(2,1fr)}footer .g{grid-template-columns:repeat(3,1fr)}}
+@media (max-width:860px){nav,.hide-m{display:none}.burger{display:block}.hero .w,.split{grid-template-columns:1fr}.g{grid-template-columns:1fr 1fr}.hero .w{padding:56px 20px}}
+@media (max-width:560px){.g,.g4,footer .g{grid-template-columns:1fr}section{padding:56px 0}.hero p{font-size:17px}.row .btn{flex:1}}
+</style></head><body><slot /></body></html>

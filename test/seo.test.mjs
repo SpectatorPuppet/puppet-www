@@ -1,0 +1,10 @@
+import { test } from 'node:test';
+import assert from 'node:assert/strict';
+import { readFileSync, existsSync } from 'node:fs';
+const html = readFileSync('dist/index.html', 'utf8');
+test('one h1', () => assert.equal(html.match(/<h1/g).length, 1));
+test('meta description + canonical + og', () => { for (const t of ['name="description"', 'rel="canonical"', 'og:title']) assert.ok(html.includes(t), t); });
+test('json-ld valid', () => JSON.parse(html.match(/application\/ld\+json">(.*?)<\/script>/s)[1]));
+test('no client js shipped', () => assert.ok(!/<script(?![^>]*ld\+json)/.test(html)));
+test('sitemap built', () => assert.ok(existsSync('dist/sitemap-index.xml')));
+test('images have alt or aria-label', () => assert.ok(!/<svg(?![^>]*(aria-label|aria-hidden))[^>]*role="img"/.test(html)));
