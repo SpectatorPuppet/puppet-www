@@ -1,56 +1,37 @@
 ---
 import Base from '../layouts/Base.astro';
-const ld = '{"@context":"https://schema.org","@graph":[{"@type":"Organization","name":"Puppet"},{"@type":"SoftwareApplication","name":"Puppet Booking","applicationCategory":"BusinessApplication","operatingSystem":"Web, iOS, Android"},{"@type":"FAQPage","mainEntity":[{"@type":"Question","name":"Is there a free trial?","acceptedAnswer":{"@type":"Answer","text":"Yes, 14 days, no card."}}]}]}';
+import Plans from '../components/Plans.astro';
+import Faqs from '../components/Faqs.astro';
+import Cta from '../components/Cta.astro';
+import { faqs, links, trialDays, comparisons, launchOffer, fromPrice } from '../data/site';
+const top = faqs.slice(0, 5);
+const ld = [{ '@type': 'FAQPage', mainEntity: top.map((f) => ({ '@type': 'Question', name: f.q, acceptedAnswer: { '@type': 'Answer', text: f.a } })) }];
 ---
-<Base title="Puppet – Booking & Task Software for Growing Businesses" description="Puppet gives small and growing businesses online booking, project management and more on one secure account. Your brand, your domain. Free trial, no card.">
-<script slot="head" type="application/ld+json" set:html={ld} />
-
-<header><div class="w"><a class="logo" href="/">puppet<i>.</i></a><nav aria-label="Main"><a href="/booking">Booking</a><a href="/tasks">Tasks</a><a href="/pricing">Pricing</a><a href="/customers">Customers</a><a href="/docs">Docs</a></nav><span class="sp"></span><a class="hide-m" style="color:#C0C0C0;text-decoration:none" href="/login">Sign in</a><a class="btn hide-m" href="/signup">Start free trial</a><button class="burger" aria-label="Open menu">☰</button></div></header>
-<main>
+<Base title="Puppet: Client Work and Booking Software, AI Included" description="Run your client work and your bookings in one place, with AI that doesn't cost extra per seat. Tasks from $5, Booking from $6. 14-day trial." ld={ld}>
 <section class="hero" style="padding:0"><div class="w"><div>
-<h1>Run your business. We pull the strings.</h1>
-<p>Online booking, project management and more, all on one secure Puppet account. Your brand, your domain, on web, iPhone and Android.</p>
-<div class="row"><a class="btn" href="/signup">Start 14-day free trial</a><a class="btn gh" href="/demo">Book a demo</a></div>
-<div class="trust"><b>★ 4.8</b> from early customers · No card needed · Cancel anytime</div></div>
+<h1>Run your client work and your bookings in one place</h1>
+<p>Boards your team actually finishes and a booking page that answers customers for you, with AI that doesn't cost extra per seat.</p>
+<div class="row"><a class="btn" href={links.signup}>Start {trialDays}-day trial</a><a class="btn gh" href={links.demo}>Book a demo</a></div>
+<div class="trust"><b>Launch offer:</b> {launchOffer} <a href={links.tasksDemo}>Try the live demo</a></div></div>
 <svg viewBox="0 0 400 300" role="img" aria-label="Flat layered hills with a red sun and a tent"><circle cx="300" cy="80" r="44" fill="#E10600"/><path d="M0 200 Q100 120 200 190 T400 170 V300 H0Z" fill="#C0C0C0" opacity=".45"/><path d="M0 235 Q120 170 240 228 T400 212 V300 H0Z" fill="#C0C0C0" opacity=".8"/><path d="M160 236 l40 -58 l40 58Z" fill="#E10600"/><path d="M196 236 l4 -20 l4 20Z" fill="#2A2A2A"/><path d="M60 70 q8 -8 16 0 q8 -8 16 0M110 48 q6 -6 12 0 q6 -6 12 0" stroke="#C0C0C0" fill="none" stroke-width="3"/></svg></div></section>
-<div class="logos" aria-label="Trusted by"><div class="w"><span>SALON CO</span><span>FITLAB</span><span>CLINIC+</span><span>STUDIO 9</span><span>EVENTIFY</span></div></div>
 
-<section id="products"><div class="w"><h2>One account. Every tool your business needs.</h2><p class="lead">Start with one product and add more when you grow. Same sign-in, same billing, same team.</p>
-<div class="g"><article class="c"><div class="ic"><svg viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2"><rect x="3" y="5" width="18" height="16" rx="2"/><path d="M3 10h18M8 3v4M16 3v4"/></svg></div><h3>Puppet Booking</h3><p>Online appointment scheduling with staff calendars, deposits, reminders and a booking page on your own domain.</p><a class="more" href="/booking">Explore Booking →</a></article>
-<article class="c"><div class="ic"><svg viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2"><path d="M4 6h16M4 12h10M4 18h7"/><path d="m15 17 2 2 4-4"/></svg></div><h3>Puppet Tasks</h3><p>Project management with boards, lists, docs and built-in AI. Turn voice notes into tasks in seconds.</p><a class="more" href="/tasks">Explore Tasks →</a></article>
-<article class="c"><div class="ic"><svg viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2"><circle cx="12" cy="12" r="9"/><path d="M12 8v8M8 12h8"/></svg></div><h3>More coming</h3><p>CRM, invoicing and forms are on the roadmap. Every new product joins your existing account.</p><a class="more" href="/roadmap">See roadmap →</a></article></div></div></section>
+<section id="products"><div class="w"><h2>One account. Every tool your business needs.</h2><p class="lead">Start with one product and add more as you grow. Same sign-in, same billing, same team.</p>
+<div class="g"><article class="c"><div class="ic"><svg viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2" aria-hidden="true"><path d="M4 6h16M4 12h10M4 18h7"/><path d="m15 17 2 2 4-4"/></svg></div><h3>Puppet Tasks</h3><p>Boards, lists and calendar, with GitHub, CI, Slack and Figma built in. Voice notes become tickets, and AI runs on your own key or a free local model.</p><a class="more" href="/tasks">Explore Tasks →</a></article>
+<article class="c"><div class="ic"><svg viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2" aria-hidden="true"><rect x="3" y="5" width="18" height="16" rx="2"/><path d="M3 10h18M8 3v4M16 3v4"/></svg></div><h3>Puppet Booking</h3><p>Online appointment scheduling with staff schedules, deposits, reminders and AI answers, on a booking page on your own domain.</p><a class="more" href="/booking">Explore Booking →</a></article>
+<article class="c"><div class="ic"><svg viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2" aria-hidden="true"><circle cx="12" cy="12" r="9"/><path d="M12 8v8M8 12h8"/></svg></div><h3>More coming</h3><p>CRM, invoicing and forms are on the roadmap. Every new product joins your existing account.</p><a class="more" href="/roadmap">See roadmap →</a></article></div></div></section>
 
-<section style="background:#fff"><div class="w split"><div><h2>Online booking software that looks like your brand</h2><p class="lead">Customers book in three taps. You get fewer no-shows and a calendar that fills itself.</p><ul><li>Booking page on booking.yourbrand.com</li><li>Staff schedules, breaks and holidays</li><li>SMS and email reminders</li><li>Deposits and payments with Stripe</li></ul><a class="btn" href="/booking">See Booking features</a></div><div class="mock" role="img" aria-label="Booking dashboard preview"><div></div><div class="m2"><span></span><span></span><span></span><span></span><span></span></div></div></div></section>
-<section><div class="w split"><div class="mock" role="img" aria-label="Tasks board preview"><div></div><div class="m2"><span></span><span></span><span></span><span></span><span></span></div></div><div><h2>Project management with AI built in</h2><p class="lead">Plan, assign and ship work in one place. Use Puppet AI or bring your own key.</p><ul><li>Boards, lists, calendar and timeline views</li><li>AI summaries, task writing and voice to task</li><li>Guests and client portals</li><li>Time tracking and reports</li></ul><a class="btn" href="/tasks">See Tasks features</a></div></div></section>
+<section style="background:#fff"><div class="w split"><div class="mock" role="img" aria-label="Tasks board preview"><div></div><div class="m2"><span></span><span></span><span></span><span></span><span></span></div></div><div><h2>Project management where Done means tested</h2><p class="lead">Link each acceptance criterion to a test. When your CI run passes, the ticket can close. Not before.</p><ul><li>GitHub pull requests move tickets for you</li><li>Voice notes become tickets with acceptance criteria</li><li>Ask your board: "what is blocking the release?"</li><li>Claude reads and updates tickets over MCP</li></ul><a class="btn" href="/tasks">See Tasks features</a></div></div></section>
+<section><div class="w split"><div><h2>Online booking that looks like your brand</h2><p class="lead">Customers book in a few taps, any time. You get fewer phone calls and fewer no-shows.</p><ul><li>Booking page on booking.yourbrand.com</li><li>Staff schedules, breaks and holidays</li><li>Email and SMS reminders</li><li>Deposits with Stripe</li></ul><a class="btn" href="/booking">See Booking features</a></div><div class="mock" role="img" aria-label="Booking dashboard preview"><div></div><div class="m2"><span></span><span></span><span></span><span></span><span></span></div></div></div></section>
 
-<section class="dark"><div class="w"><h2>Built for business, secure by default</h2><p class="lead">Enterprise-grade features on every plan, not just the expensive one.</p>
-<div class="g g4"><div class="c"><h3>Your brand</h3><p>Themes, logo, colors and custom domain.</p></div><div class="c"><h3>Single sign-on</h3><p>Google, Microsoft, SAML and MFA.</p></div><div class="c"><h3>Roles & audit log</h3><p>Fine-grained permissions, full history.</p></div><div class="c"><h3>Every device</h3><p>Web, iPad, iPhone and Android apps.</p></div><div class="c"><h3>Fast</h3><p>Pages load in under a second.</p></div><div class="c"><h3>Accessible</h3><p>WCAG 2.2 AA tested.</p></div><div class="c"><h3>Private</h3><p>GDPR ready, data export anytime.</p></div><div class="c"><h3>Reliable</h3><p>99.9% uptime, live status page.</p></div></div></div></section>
+<section class="dark"><div class="w"><h2>Built for business, secure by default</h2><p class="lead">The features other tools save for their most expensive plan.</p>
+<div class="g g4"><div class="c"><h3>Your brand</h3><p>Themes, logo, colors and custom domain.</p></div><div class="c"><h3>AI you control</h3><p>Included, local, or your own key.</p></div><div class="c"><h3>Roles and guests</h3><p>Fine-grained permissions for staff and clients.</p></div><div class="c"><h3>Isolated data</h3><p>Each customer's data separated in the database.</p></div><div class="c"><h3>Every device</h3><p>Installable app for desktop, iPad and phones.</p></div><div class="c"><h3>Fast</h3><p>Static pages and lean apps.</p></div><div class="c"><h3>Accessible</h3><p>Every page checked with axe.</p></div><div class="c"><h3>Private</h3><p>Voice audio deleted after transcription.</p></div></div></div></section>
 
-<section><div class="w"><h2>Up and running in 3 steps</h2><div class="g steps"><div><div class="n">1</div><h3>Create your account</h3><p>Sign up free in under a minute.</p></div><div><div class="n">2</div><h3>Pick your products</h3><p>Turn on Booking, Tasks or both.</p></div><div><div class="n">3</div><h3>Share your link</h3><p>Send customers your booking page.</p></div></div></div></section>
+<section><div class="w"><h2>Up and running in 3 steps</h2><div class="g steps"><div><div class="n">1</div><h3>Create your account</h3><p>Start a {trialDays}-day trial in under a minute.</p></div><div><div class="n">2</div><h3>Pick your products</h3><p>Turn on Tasks, Booking or both.</p></div><div><div class="n">3</div><h3>Invite your team</h3><p>Add staff, and clients as guests.</p></div></div></div></section>
 
-<section style="background:#fff"><div class="w"><div class="g"><div><div class="stat">40%</div><p>fewer no-shows with reminders</p></div><div><div class="stat">5 min</div><p>average setup time</p></div><div><div class="stat">24/7</div><p>online booking for your customers</p></div></div></div></section>
+<section class="pr" id="pricing" style="background:#fff"><div class="w"><h2>Simple pricing, AI included</h2><p class="lead">Tasks from {fromPrice('Tasks')} per user and Booking from {fromPrice('Booking')} per staff calendar a month. <a href="/pricing">See all plans</a>, also in <a href="/pricing/eur">euros</a> and <a href="/pricing/inr">rupees</a>.</p><h3>Puppet Tasks</h3><Plans product="Tasks" /><h3 style="margin-top:32px">Puppet Booking</h3><Plans product="Booking" /></div></section>
 
-<section><div class="w"><h2>Loved by small teams</h2><div class="g"><blockquote class="c q">"Our clients book themselves now. Phone calls dropped by half."<cite>Owner, hair salon</cite></blockquote><blockquote class="c q">"Tasks replaced three tools for our agency."<cite>Founder, design studio</cite></blockquote><blockquote class="c q">"Setup took one afternoon."<cite>Manager, physio clinic</cite></blockquote></div></div></section>
+<section style="padding-bottom:0"><div class="w"><h2>How Puppet compares</h2><div class="g">{comparisons.map((c) => <article class="c"><h3>Puppet {c.product} vs {c.name}</h3><p>{c.summary}</p><a class="more" href={`/compare/${c.slug}`}>Read the comparison →</a></article>)}</div></div></section>
 
-<section class="pr" id="pricing" style="background:#fff"><div class="w"><h2>Simple pricing</h2><p class="lead">Every plan includes all products, free trial and support.</p>
-<div class="g"><div class="c"><h3>Starter</h3><div class="price">$X<small>/mo</small></div><ul><li>1 product</li><li>Up to 3 users</li><li>Email support</li></ul><a class="btn gh dk" style="color:#2A2A2A;border-color:#2A2A2A" href="/signup">Start trial</a></div>
-<div class="c hot"><h3>Business</h3><div class="price">$Y<small>/mo</small></div><ul><li>All products</li><li>Up to 25 users</li><li>Custom domain</li></ul><a class="btn" href="/signup">Start trial</a></div>
-<div class="c"><h3>Enterprise</h3><div class="price">Custom</div><ul><li>SSO and SAML</li><li>Unlimited users</li><li>SLA and onboarding</li></ul><a class="btn gh" style="color:#2A2A2A;border-color:#2A2A2A" href="/contact">Talk to sales</a></div></div></div></section>
-
-<section id="faq"><div class="w" style="max-width:820px"><h2>Frequently asked questions</h2>
-<details open><summary>Is there a free trial?</summary><p>Yes. 14 days, all features, no credit card.</p></details>
-<details><summary>Can I use my own domain?</summary><p>Yes, on Business and Enterprise. Otherwise you get yourname.booking.puppet.</p></details>
-<details><summary>Do you have mobile apps?</summary><p>Yes, for iPhone, iPad and Android, plus an installable web app.</p></details>
-<details><summary>Is my data secure?</summary><p>Data is encrypted in transit and at rest, with MFA, roles and audit logs.</p></details>
-<details><summary>Can I cancel anytime?</summary><p>Yes, no contracts. Export your data whenever you like.</p></details></div></section>
-
-<section style="padding-top:0"><div class="w"><div class="cta"><h2>Start free today</h2><p>Join businesses running on Puppet. No card needed.</p><a class="btn" href="/signup">Start free trial</a><div class="stores"><span>App Store</span><span>Google Play</span></div></div></div></section>
-</main>
-<footer><div class="w"><div class="g"><div><a class="logo" style="color:#fff" href="/">puppet<i>.</i></a><p>Business software that bends to your brand.</p></div>
-<div><h3>Products</h3><a href="/booking">Booking</a><a href="/tasks">Tasks</a><a href="/roadmap">Roadmap</a></div>
-<div><h3>Solutions</h3><a href="/salons">Salons</a><a href="/clinics">Clinics</a><a href="/agencies">Agencies</a></div>
-<div><h3>Resources</h3><a href="/blog">Blog</a><a href="/docs">Docs</a><a href="/status">Status</a></div>
-<div><h3>Company</h3><a href="/about">About</a><a href="/contact">Contact</a><a href="/careers">Careers</a></div></div>
-<div class="legal"><span>© 2026 Puppet</span><span><a style="display:inline" href="/privacy">Privacy</a> · <a style="display:inline" href="/terms">Terms</a> · <a style="display:inline" href="/security">Security</a></span></div></div></footer>
-
+<section id="faq"><div class="w" style="max-width:820px"><h2>Frequently asked questions</h2><Faqs items={top} /><p><a href="/faq">All questions →</a></p></div></section>
+<Cta />
 </Base>

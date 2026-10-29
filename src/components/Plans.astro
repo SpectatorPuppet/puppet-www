@@ -1,0 +1,10 @@
+---
+import { pricing, price, currencies, links, minSeats, trialDays, type Currency } from '../data/site';
+const { product, cur = currencies[0] } = Astro.props as { product: 'Tasks' | 'Booking'; cur?: Currency };
+const p = pricing.find((x) => x.product === product)!;
+---
+<div class="g">{p.plans.map((plan) => (
+  <div class:list={['c', { hot: plan.hot }]}><h3>{plan.name}</h3><div class="price">{price(plan, cur)}<small> {p.unit}</small></div><p>{plan.blurb}</p><ul>{plan.features.map((f) => <li>{f}</li>)}</ul>
+  <a class={plan.hot ? 'btn' : 'btn gh'} style={plan.hot ? '' : 'color:#2A2A2A;border-color:#2A2A2A'} href={links.signup}>Start {trialDays}-day trial</a></div>
+))}</div>
+<p class="ph">Billed annually; monthly billing is about 20% more.{product === 'Tasks' && ` Minimum ${minSeats} seats.`}</p>

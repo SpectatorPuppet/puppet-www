@@ -1,0 +1,5 @@
+---
+import type { Feature } from '../data/site';
+const { items } = Astro.props as { items: Feature[] };
+---
+<div class="g">{items.map((f) => <article class="c"><h3>{f.title}</h3><p>{f.text}</p></article>)}</div>

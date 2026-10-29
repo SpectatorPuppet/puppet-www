@@ -1,0 +1,16 @@
+---
+import Base from '../../layouts/Base.astro';
+import Cta from '../../components/Cta.astro';
+import { comparisons, type Comparison } from '../../data/site';
+export const getStaticPaths = () => comparisons.map((c) => ({ params: { slug: c.slug }, props: { c } }));
+const { c } = Astro.props as { c: Comparison };
+const path = `/compare/${c.slug}`;
+const us = `Puppet ${c.product}`;
+---
+<Base title={c.seoTitle} description={c.description} path={path} type="article" crumbs={[['Compare', '/compare'], [`vs ${c.name}`, path]]}>
+<Fragment slot="hero"><h1>{us} vs {c.name}</h1><p>{c.summary}</p></Fragment>
+<section><div class="w"><h2>Feature comparison</h2><div class="tw"><table><thead><tr><th scope="col">Feature</th><th scope="col">{us}</th><th scope="col">{c.name}</th></tr></thead><tbody>{c.rows.map(([f, a, b]) => <tr><th scope="row">{f}</th><td>{a}</td><td>{b}</td></tr>)}</tbody></table></div>
+<p class="ph">Based on public information as of October 2026. {c.name} is a trademark of its owner; check their site for current plans and prices.</p></div></section>
+<section style="background:#fff"><div class="w"><div class="g" style="grid-template-columns:1fr 1fr"><article class="c"><h2 style="font-size:22px">Pick {c.name} if</h2><p>{c.pickThem}</p></article><article class="c"><h2 style="font-size:22px">Pick {us} if</h2><p>{c.pickUs}</p></article></div></div></section>
+<Cta title={`Try ${us} for 14 days`} />
+</Base>

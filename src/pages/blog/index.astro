@@ -1,0 +1,8 @@
+---
+import Base from '../../layouts/Base.astro';
+import { posts } from '../../data/site';
+---
+<Base title="Puppet Blog: Shipping, Project Management and Booking Tips" description="Practical guides on CI-verified tickets, voice-to-task AI, bring-your-own AI keys and cutting appointment no-shows, from the Puppet team." path="/blog" crumbs={[['Blog', '/blog']]}>
+<Fragment slot="hero"><h1>Puppet blog</h1><p>Practical guides for teams that ship and businesses that book.</p></Fragment>
+<section><div class="w"><div class="g">{posts.map((p) => <article class="c"><h2 style="font-size:22px"><a href={`/blog/${p.slug}`} style="text-decoration:none">{p.title}</a></h2><p class="meta"><time datetime={p.date}>{p.date}</time></p><p>{p.description}</p></article>)}</div></div></section>
+</Base>

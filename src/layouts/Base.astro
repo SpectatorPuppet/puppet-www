@@ -1,14 +1,27 @@
 ---
-const { title, description, path = '/' } = Astro.props;
+import { brand, links } from '../data/site';
+interface Props { title: string; description: string; path?: string; ld?: object[]; crumbs?: [string, string][]; type?: string; noindex?: boolean }
+const { title, description, path = '/', ld = [], crumbs = [], type = 'website', noindex = false } = Astro.props;
 const site = Astro.site ?? new URL('https://example.com');
-const canonical = new URL(path, site).href;
+const url = (p: string) => new URL(p, site).href;
+const canonical = url(path);
+// One JSON-LD graph per page: the organization, the page's own nodes, and breadcrumbs.
+const graph = [
+  { '@type': 'Organization', '@id': url('/#org'), name: brand, url: url('/') },
+  { '@type': 'WebSite', '@id': url('/#site'), name: brand, url: url('/'), publisher: { '@id': url('/#org') } },
+  ...ld,
+  ...(crumbs.length ? [{ '@type': 'BreadcrumbList', itemListElement: [['Home', '/'], ...crumbs].map(([name, p], i) => ({ '@type': 'ListItem', position: i + 1, name, item: url(p) })) }] : []),
+];
+const json = JSON.stringify({ '@context': 'https://schema.org', '@graph': graph }).replace(/</g, '\\u003c');
+const nav: [string, string][] = [['Tasks', '/tasks'], ['Booking', '/booking'], ['Pricing', '/pricing'], ['Compare', '/compare'], ['Blog', '/blog']];
 ---
 <!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
 <title>{title}</title><meta name="description" content={description}><link rel="canonical" href={canonical}>
-<meta property="og:title" content={title}><meta property="og:description" content={description}><meta property="og:url" content={canonical}><meta property="og:type" content="website"><meta name="twitter:card" content="summary_large_image">
+<meta property="og:site_name" content={brand}><meta property="og:title" content={title}><meta property="og:description" content={description}><meta property="og:url" content={canonical}><meta property="og:type" content={type}><meta name="twitter:card" content="summary">
+{noindex && <meta name="robots" content="noindex">}<meta name="theme-color" content="#2A2A2A"><link rel="icon" href="/favicon.svg" type="image/svg+xml">
 <link rel="sitemap" href="/sitemap-index.xml">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin><link href="https://fonts.googleapis.com/css2?family=Archivo:wght@600;800&family=IBM+Plex+Sans:wght@400;500;600&display=swap" rel="stylesheet">
-<slot name="head" />
+<script type="application/ld+json" set:html={json} />
 <style is:global>
 :root{--ch:#2A2A2A;--si:#C0C0C0;--red:#E10600;--bg:#F6F6F4;--mu:#5c5c5c}
 *{box-sizing:border-box}body{margin:0;background:var(--bg);color:var(--ch);font:16px/1.6 "IBM Plex Sans",sans-serif}
@@ -18,7 +31,6 @@ header{background:var(--ch);color:#fff;position:sticky;top:0;z-index:3}header .w
 .logo{font:800 24px Archivo;text-decoration:none}.logo i{color:var(--red);font-style:normal}nav{display:flex;gap:22px;font-size:15px}nav a{color:var(--si);text-decoration:none}.sp{flex:1}
 .btn{display:inline-flex;align-items:center;justify-content:center;background:var(--red);color:#fff;padding:12px 22px;border-radius:8px;font-weight:600;text-decoration:none;min-height:46px}
 .gh{background:transparent;border:1px solid var(--si);color:#fff}.dk .gh{color:var(--ch);border-color:var(--ch)}
-.burger{display:none;width:44px;height:44px;border:1px solid #555;border-radius:8px;background:none;color:#fff;font-size:20px}
 .hero{background:var(--ch);color:#fff}.hero .w{display:grid;grid-template-columns:1.1fr 1fr;gap:40px;align-items:center;padding:80px 20px 96px}
 .hero h1{font-size:clamp(36px,5.4vw,62px)}.hero p{color:var(--si);font-size:19px;max-width:34em}.row{display:flex;gap:12px;flex-wrap:wrap;margin:24px 0}
 .trust{font-size:14px;color:var(--si)}.trust b{color:#fff}
@@ -40,9 +52,30 @@ section{padding:80px 0}.lead{color:var(--mu);font-size:18px;max-width:40em;margi
 details{background:#fff;border:1px solid #e2e2e2;border-radius:12px;padding:16px 20px;margin-bottom:10px}summary{font-weight:600;cursor:pointer}
 .cta{background:var(--red);color:#fff;border-radius:20px;padding:56px 24px;text-align:center}.cta .btn{background:var(--ch)}
 .stores{display:flex;gap:10px;justify-content:center;margin-top:16px}.stores span{border:1px solid #fff;border-radius:8px;padding:8px 14px;font-size:13px}
-footer{background:var(--ch);color:var(--si);padding:56px 0 24px;font-size:14px}footer .g{grid-template-columns:2fr repeat(4,1fr)}footer h3{color:#fff;font-size:15px}footer a{display:block;text-decoration:none;margin:6px 0}
+footer{background:var(--ch);color:var(--si);padding:56px 0 24px;font-size:14px}footer .g{grid-template-columns:2fr repeat(4,1fr)}footer .fh{color:#fff;font-size:15px;font-family:Archivo}footer a{display:block;text-decoration:none;margin:6px 0}
 .legal{border-top:1px solid #444;margin-top:32px;padding-top:16px;display:flex;justify-content:space-between;flex-wrap:wrap;gap:8px}
 @media (max-width:1000px){.g4{grid-template-columns:repeat(2,1fr)}footer .g{grid-template-columns:repeat(3,1fr)}}
-@media (max-width:860px){nav,.hide-m{display:none}.burger{display:block}.hero .w,.split{grid-template-columns:1fr}.g{grid-template-columns:1fr 1fr}.hero .w{padding:56px 20px}}
+@media (max-width:860px){nav,.hide-m{display:none}.hero .w,.split{grid-template-columns:1fr}.g{grid-template-columns:1fr 1fr}.hero .w{padding:56px 20px}}
 @media (max-width:560px){.g,.g4,footer .g{grid-template-columns:1fr}section{padding:56px 0}.hero p{font-size:17px}.row .btn{flex:1}}
-</style></head><body><slot /></body></html>
+.mm{display:none;position:relative;background:none;border:0;padding:0;margin:0}.mm summary{list-style:none;width:44px;height:44px;border:1px solid #555;border-radius:8px;display:grid;place-items:center;color:#fff}.mm summary::-webkit-details-marker{display:none}
+.mm div{position:absolute;right:0;top:52px;background:var(--ch);border:1px solid #444;border-radius:12px;padding:12px;display:grid;gap:4px;min-width:200px}.mm div a{color:#fff;text-decoration:none;padding:8px}
+.crumbs{font-size:14px;color:var(--si);margin-bottom:12px}.crumbs a{color:var(--si)}
+.page{background:var(--ch);color:#fff;padding:64px 0}.page h1{font-size:clamp(32px,4.6vw,52px)}.page p{color:var(--si);font-size:19px;max-width:40em}
+table{width:100%;border-collapse:collapse;background:#fff;border-radius:12px;overflow:hidden}th,td{padding:12px 14px;border-bottom:1px solid #e2e2e2;text-align:left;vertical-align:top}th{background:#efefed}
+.tw{overflow-x:auto}.prose{max-width:720px}.prose p{font-size:18px}.meta{color:var(--mu);font-size:14px}
+.ph{font-size:13px;color:var(--mu)}
+@media (max-width:860px){.mm{display:block}}
+</style></head><body>
+<header><div class="w"><a class="logo" href="/">puppet<i>.</i></a><nav aria-label="Main">{nav.map(([l, h]) => <a href={h}>{l}</a>)}</nav><span class="sp"></span><a class="hide-m" style="color:#C0C0C0;text-decoration:none" href={links.login}>Sign in</a><a class="btn hide-m" href={links.signup}>Start trial</a>
+<details class="mm"><summary aria-label="Menu">☰</summary><div>{nav.map(([l, h]) => <a href={h}>{l}</a>)}<a href={links.login}>Sign in</a><a href={links.signup}>Start trial</a></div></details></div></header>
+<main>
+{crumbs.length > 0 && <div class="page"><div class="w"><nav class="crumbs" aria-label="Breadcrumb"><a href="/">Home</a>{crumbs.map(([n, p], i) => i < crumbs.length - 1 ? <> / <a href={p}>{n}</a></> : <> / <span aria-current="page">{n}</span></>)}</nav><slot name="hero" /></div></div>}
+<slot />
+</main>
+<footer><div class="w"><div class="g"><div><a class="logo" style="color:#fff" href="/">puppet<i>.</i></a><p>Business software that bends to your brand.</p></div>
+<div><h2 class="fh">Products</h2><a href="/tasks">Puppet Tasks</a><a href="/booking">Puppet Booking</a><a href="/pricing">Pricing</a><a href="/roadmap">Roadmap</a></div>
+<div><h2 class="fh">Solutions</h2><a href="/for/software-teams">Software teams</a><a href="/for/agencies">Agencies</a><a href="/for/consultants">Consultants</a><a href="/for/events">Event organisers</a><a href="/for/ai-own-api-key">Bring your own AI key</a></div>
+<div><h2 class="fh">Compare</h2><a href="/compare/clickup">vs ClickUp</a><a href="/compare/jira">vs Jira</a><a href="/compare/calendly">vs Calendly</a></div>
+<div><h2 class="fh">Company</h2><a href="/about">About</a><a href="/blog">Blog</a><a href="/faq">FAQ</a><a href="/security">Security</a></div></div>
+<div class="legal"><span>© 2026 Puppet</span><span><a style="display:inline" href="/privacy">Privacy</a> · <a style="display:inline" href="/terms">Terms</a></span></div></div></footer>
+</body></html>
