@@ -1,5 +1,12 @@
 name: CI
-on: [push, pull_request]
+on:
+  # Pull requests into dev (daily work) or main (release) are tested; so is main after a merge.
+  # A merge into dev isn't tested again: its pull request already was.
+  pull_request:
+    branches: [main, dev]
+  push:
+    branches: [main]
+
 permissions: { contents: read }
 jobs:
   test:
