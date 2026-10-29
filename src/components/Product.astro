@@ -1,0 +1,19 @@
+---
+import Base from '../layouts/Base.astro';
+import Features from './Features.astro';
+import Cta from './Cta.astro';
+import Plans from './Plans.astro';
+import { brand, comparisons, currencies, pricing, links, trialDays, type Feature } from '../data/site';
+interface Props { name: 'Tasks' | 'Booking'; path: string; title: string; description: string; h1: string; intro: string; category: string; features: Feature[]; extra?: { heading: string; lead: string; items: Feature[] } }
+const p = Astro.props;
+const full = `${brand} ${p.name}`;
+const ld = [{ '@type': 'SoftwareApplication', name: full, description: p.description, applicationCategory: p.category, operatingSystem: 'Web, iOS, Android, Windows, macOS', offers: pricing.find((x) => x.product === p.name)!.plans.flatMap((plan) => currencies.map((c) => ({ '@type': 'Offer', name: plan.name, price: String(plan.prices[c.code]), priceCurrency: c.code }))) }];
+---
+<Base title={p.title} description={p.description} path={p.path} ld={ld} crumbs={[[full, p.path]]}>
+<Fragment slot="hero"><h1>{p.h1}</h1><p>{p.intro}</p><div class="row"><a class="btn" href={links.signup}>Start {trialDays}-day trial</a><a class="btn gh" href={links.demo}>Book a demo</a>{p.name === 'Tasks' && <a class="btn gh" href={links.tasksDemo}>Try the live demo</a>}</div></Fragment>
+<section><div class="w"><h2>What you get with {full}</h2><Features items={p.features} /></div></section>
+{p.extra && <section style="background:#fff"><div class="w"><h2>{p.extra.heading}</h2><p class="lead">{p.extra.lead}</p><Features items={p.extra.items} /></div></section>}
+<section><div class="w"><h2>{full} compared</h2><div class="g">{comparisons.filter((c) => c.product === p.name).map((c) => <article class="c"><h3>{full} vs {c.name}</h3><p>{c.summary}</p><a class="more" href={`/compare/${c.slug}`}>Read the comparison →</a></article>)}</div></div></section>
+<section class="pr" style="background:#fff"><div class="w"><h2>{full} pricing</h2><Plans product={p.name} /><p><a href="/pricing">All prices, in dollars, euros and rupees →</a></p></div></section>
+<Cta />
+</Base>

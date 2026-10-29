@@ -1,0 +1,10 @@
+---
+import Product from '../components/Product.astro';
+import { tasksFeatures, integrations } from '../data/site';
+---
+<Product name="Tasks" path="/tasks" category="ProjectManagementApplication" features={tasksFeatures}
+  title="Puppet Tasks: Project Management with AI Included"
+  description="Boards your team actually finishes: AI writes tickets, CI checks acceptance criteria, GitHub and Slack built in. From $5 per user. 14-day trial."
+  h1="Boards your team actually finishes"
+  intro="AI writes the tickets, checks the acceptance criteria, and answers questions about your board. Lighter than ClickUp, with AI that does not cost extra per seat."
+  extra={{ heading: 'Works with the tools you already use', lead: 'Connect once per workspace. Secrets are never shown again after you save them.', items: integrations }} />

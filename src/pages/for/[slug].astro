@@ -1,0 +1,13 @@
+---
+import Base from '../../layouts/Base.astro';
+import Cta from '../../components/Cta.astro';
+import { audiences, type Audience } from '../../data/site';
+export const getStaticPaths = () => audiences.map((a) => ({ params: { slug: a.slug }, props: { a } }));
+const { a } = Astro.props as { a: Audience };
+const path = `/for/${a.slug}`;
+---
+<Base title={`${a.title} | Puppet`} description={a.description} path={path} crumbs={[[a.name, path]]}>
+<Fragment slot="hero"><h1>{a.title}</h1><p>{a.pain}</p></Fragment>
+<section><div class="w split"><div><h2>How Puppet {a.product} helps {a.name.toLowerCase()}</h2><ul>{a.points.map((p) => <li>{p}</li>)}</ul><a class="btn" href={`/${a.product.toLowerCase()}`}>See Puppet {a.product}</a></div><div class="mock" role="img" aria-label={`Puppet ${a.product} preview`}><div></div><div class="m2"><span></span><span></span><span></span><span></span><span></span></div></div></div></section>
+<Cta />
+</Base>

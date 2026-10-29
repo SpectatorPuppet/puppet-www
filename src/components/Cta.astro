@@ -1,0 +1,5 @@
+---
+import { links, trialDays, launchOffer } from '../data/site';
+const { title = `Start your ${trialDays}-day trial`, text = `Every feature on during the trial. Launch offer: ${launchOffer}` } = Astro.props;
+---
+<section><div class="w"><div class="cta"><h2>{title}</h2><p>{text}</p><div class="row" style="justify-content:center"><a class="btn" href={links.signup}>Start {trialDays}-day trial</a><a class="btn gh" href={links.demo}>Book a demo</a></div></div></div></section>

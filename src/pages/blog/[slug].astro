@@ -1,0 +1,14 @@
+---
+import Base from '../../layouts/Base.astro';
+import Cta from '../../components/Cta.astro';
+import { brand, posts, type Post } from '../../data/site';
+export const getStaticPaths = () => posts.map((p) => ({ params: { slug: p.slug }, props: { p } }));
+const { p } = Astro.props as { p: Post };
+const path = `/blog/${p.slug}`;
+const ld = [{ '@type': 'BlogPosting', headline: p.title, description: p.description, datePublished: p.date, dateModified: p.date, author: { '@type': 'Organization', name: brand }, mainEntityOfPage: new URL(path, Astro.site).href }];
+---
+<Base title={p.title} description={p.description} path={path} type="article" ld={ld} crumbs={[['Blog', '/blog'], [p.title, path]]}>
+<Fragment slot="hero"><h1>{p.title}</h1><p class="meta" style="color:#C0C0C0"><time datetime={p.date}>{p.date}</time></p></Fragment>
+<section><div class="w prose">{p.body.map((t) => <p>{t}</p>)}</div></section>
+<Cta />
+</Base>

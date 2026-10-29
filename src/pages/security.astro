@@ -1,0 +1,7 @@
+---
+import Base from '../layouts/Base.astro';
+---
+<Base title="Security at Puppet: How We Protect Your Data" description="How Puppet protects your data: database isolation per customer, roles and permissions, signed webhooks, secrets never shown again, and audio deleted." path="/security" crumbs={[['Security', '/security']]}>
+<Fragment slot="hero"><h1>Security</h1><p>How we protect your data and your customers' data.</p></Fragment>
+<section><div class="w prose"><p>Each customer's data is separated in the database with row-level security, so one account can never read another's.</p><p>Access is controlled by roles and fine-grained permissions, and guests see only what you share.</p><p>Webhooks are signed. Integration secrets and AI keys are never shown again after you save them.</p><p>Voice audio is deleted as soon as it is transcribed. Only the text is kept.</p><p>Every release runs automated tests, code scanning and dependency checks.</p></div></section>
+</Base>

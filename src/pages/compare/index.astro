@@ -1,0 +1,8 @@
+---
+import Base from '../../layouts/Base.astro';
+import { comparisons } from '../../data/site';
+---
+<Base title="Puppet vs ClickUp, Jira and Calendly: Comparisons" description="Honest side-by-side comparisons of Puppet Tasks and Puppet Booking with ClickUp, Jira and Calendly, and when to pick each one." path="/compare" crumbs={[['Compare', '/compare']]}>
+<Fragment slot="hero"><h1>How Puppet compares</h1><p>Side-by-side, with when to pick the other tool.</p></Fragment>
+<section><div class="w"><div class="g">{comparisons.map((c) => <article class="c"><h2 style="font-size:22px">Puppet {c.product} vs {c.name}</h2><p>{c.summary}</p><a class="more" href={`/compare/${c.slug}`}>Read the comparison →</a></article>)}</div></div></section>
+</Base>

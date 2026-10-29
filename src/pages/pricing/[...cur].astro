@@ -1,0 +1,26 @@
+---
+import Base from '../../layouts/Base.astro';
+import Plans from '../../components/Plans.astro';
+import Faqs from '../../components/Faqs.astro';
+import Cta from '../../components/Cta.astro';
+import { brand, currencies, pricing, faqs, trialDays, launchOffer, fromPrice, type Currency } from '../../data/site';
+// /pricing is USD; /pricing/eur and /pricing/inr are their own indexable pages.
+export const getStaticPaths = () => currencies.map((c) => ({ params: { cur: c.slug || undefined }, props: { c } }));
+const { c } = Astro.props as { c: Currency };
+const path = c.slug ? `/pricing/${c.slug}` : '/pricing';
+const billing = faqs.filter((f) => /trial|cost|discount|BYO|cancel/i.test(f.q));
+const ld = [
+  ...pricing.map((p) => ({ '@type': 'Product', name: `${brand} ${p.product}`, offers: p.plans.map((plan) => ({ '@type': 'Offer', name: plan.name, price: String(plan.prices[c.code]), priceCurrency: c.code })) })),
+  { '@type': 'FAQPage', mainEntity: billing.map((f) => ({ '@type': 'Question', name: f.q, acceptedAnswer: { '@type': 'Answer', text: f.a } })) },
+];
+const title = c.slug ? `Puppet Pricing in ${c.label} (${c.code}): Tasks and Booking` : 'Pricing: Puppet Tasks and Booking Plans';
+const description = `Puppet pricing in ${c.label}: Tasks from ${fromPrice('Tasks', c)} per user and Booking from ${fromPrice('Booking', c)} per staff calendar a month. ${trialDays}-day trial.`;
+---
+<Base title={title} description={description} path={path} ld={ld} crumbs={[['Pricing', path]]}>
+<Fragment slot="hero"><h1>Simple pricing, AI included</h1><p>Pay per user for Tasks and per staff calendar for Booking. Every plan starts with a {trialDays}-day trial.</p>
+<p><b style="color:#fff">Launch offer:</b> {launchOffer}</p>
+<nav class="row" aria-label="Currency">{currencies.map((x) => <a class={x.code === c.code ? 'btn' : 'btn gh'} href={x.slug ? `/pricing/${x.slug}` : '/pricing'} aria-current={x.code === c.code ? 'page' : undefined}>{x.symbol} {x.code}</a>)}</nav></Fragment>
+{pricing.map((p) => <section class="pr" style={p.product === 'Booking' ? 'background:#fff' : ''}><div class="w"><h2>{brand} {p.product}</h2><Plans product={p.product} cur={c} /></div></section>)}
+<section><div class="w" style="max-width:820px"><h2>Billing questions</h2><Faqs items={billing} /></div></section>
+<Cta />
+</Base>
