@@ -8,8 +8,9 @@ export const tasksAppUrl = env('TASKS_APP_URL', 'https://tasks.example.com');
 export const contactEmail = process.env.CONTACT_EMAIL ?? 'hello@example.com';
 export const links = {
   demo: `mailto:${contactEmail}?subject=Puppet%20demo`,
-  signup: `${appUrl}/signup`,
-  login: `${appUrl}/login`,
+  // The portal's sign-in route; `create=1` opens the sign-up form. See signupLink for plan CTAs.
+  signup: `${appUrl}/auth/sign-in?create=1`,
+  login: `${appUrl}/auth/sign-in`,
   tasksDemo: `${tasksAppUrl}/demo`,
 };
 
@@ -23,6 +24,14 @@ export const currencies: Currency[] = [
 export const trialDays = 14;
 export const minSeats = 2;
 export const launchOffer = '30% off your first year for the first 20 accounts.';
+/** Key the portal matches against the catalog: "BYO key" -> "byo-key". */
+export const keyOf = (name: string) => name.toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/^-|-$/g, '');
+/**
+ * A plan CTA: sign-up that remembers product and plan through sign-in, then opens that plan's
+ * checkout. A plan the catalog doesn't know falls back to the plan picker.
+ */
+export const signupLink = (product: string, plan: string) =>
+  `${links.signup}&product=${encodeURIComponent(keyOf(product))}&plan=${encodeURIComponent(keyOf(plan))}`;
 export type Plan = { name: string; blurb: string; prices: Record<string, number>; features: string[]; hot?: boolean };
 export type ProductPricing = { product: 'Tasks' | 'Booking'; unit: string; plans: Plan[] };
 export const pricing: ProductPricing[] = [

@@ -7,3 +7,5 @@ Puppet public website (Astro, static, zero JS).
 - Copy, prices (USD/EUR/INR), FAQs, comparisons, audiences and blog posts live in `src/data/site.ts`
 
 Build env (domain not decided): `SITE_URL` (canonical, sitemap, robots), `APP_URL` (sign-in/sign-up), `TASKS_APP_URL` (live demo at /demo), `CONTACT_EMAIL` (Book a demo).
+
+Plan buttons link to `APP_URL/auth/sign-in?create=1&product=<key>&plan=<key>` (`signupLink` in `src/data/site.ts`); the portal keeps product and plan through sign-up and opens that plan's checkout. Legal pages live in `src/pages/legal/` (terms, privacy, refunds, developer terms) on the `Legal` frame: templates, noindex with a review banner until `reviewed` is set. `public/_redirects` sends the old `/terms` and `/privacy` there.

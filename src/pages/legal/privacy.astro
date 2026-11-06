@@ -1,0 +1,14 @@
+---
+import Legal from '../../components/Legal.astro';
+import { brand, contactEmail, trialDays } from '../../data/site';
+---
+<Legal title="Privacy policy" slug="privacy" updated="2026-11-06" description="What Puppet collects, why, who processes it, how long it is kept, and how to reach us about your data.">
+<h2>What we collect</h2><ul><li>Account details: name, email, sign-in records (Puppet ID).</li><li>Organization details: members, roles, products, billing contact.</li><li>Content you put in products, such as tasks or bookings.</li><li>Usage and security logs: IP address, browser, errors.</li></ul>
+<h2>Why</h2><p>To run the service, keep it secure, bill you, and answer support requests. We don't sell personal data or use your content to train AI models.</p>
+<h2>Voice and AI</h2><p>Voice notes are turned into text and the audio is deleted once transcribed. AI keys you bring are stored encrypted and never shown again in full.</p>
+<h2>Who processes it</h2><p>Hosting ([hosting provider, region]), payments (Stripe), and email delivery ([email provider]). Third-party apps you install get only the scopes you approve; their own policies apply.</p>
+<h2>How long</h2><p>While your organization is active. After it is closed, content is deleted within 30 days and backups roll off within [N] days. Billing records are kept as tax law requires.</p>
+<h2>Your rights</h2><p>You can ask to see, correct, export or delete your data, or object to how we use it, at <a href={`mailto:${contactEmail}`}>{contactEmail}</a>. You may also complain to your data protection authority.</p>
+<h2>Cookies</h2><p>The site and portal use only cookies needed for sign-in and security. No advertising cookies.</p>
+<h2>Contact</h2><p>[Company legal name], [registered address]. <a href={`mailto:${contactEmail}`}>{contactEmail}</a>.</p>
+</Legal>
