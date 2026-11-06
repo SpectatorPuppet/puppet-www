@@ -22,6 +22,9 @@ for (const { f, html } of pages) {
     const desc = pick(html, /name="description" content="(.*?)"/s);
     assert.ok(desc && desc.length >= 70 && desc.length <= 160, `description length ${desc?.length}`);
     for (const t of ['rel="canonical"', 'og:title', 'og:description', 'lang="en"']) assert.ok(html.includes(t), t);
+    assert.match(html, /property="og:image" content="https?:\/\/[^"]+\/og\.png"/, 'og:image');
+    assert.ok(html.includes('summary_large_image'), 'large twitter card');
+    assert.ok(!html.includes('cloudflareinsights'), 'no analytics beacon without CF_ANALYTICS_TOKEN');
   });
   test(`${f}: json-ld valid`, () => {
     const ld = JSON.parse(pick(html, /application\/ld\+json">(.*?)<\/script>/s));
@@ -68,4 +71,10 @@ test('pricing pages carry real prices per currency', () => {
 
 test('no free plan promised', () => {
   for (const { f, html } of pages) assert.ok(!/free plan|free forever|start free</i.test(html), f);
+});
+
+test('the social card is a 1200x630 PNG', () => {
+  const png = readFileSync('public/og.png');
+  assert.equal(png.toString('ascii', 1, 4), 'PNG');
+  assert.deepEqual([png.readUInt32BE(16), png.readUInt32BE(20)], [1200, 630]);
 });
