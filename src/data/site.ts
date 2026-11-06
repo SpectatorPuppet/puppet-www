@@ -12,6 +12,9 @@ export const links = {
   signup: `${appUrl}/auth/sign-in?create=1`,
   login: `${appUrl}/auth/sign-in`,
   tasksDemo: `${tasksAppUrl}/demo`,
+  /** The developer guide (quickstart, scopes, routes). Set DEVELOPER_DOCS_URL once it is public. */
+  developerDocs: env('DEVELOPER_DOCS_URL', 'https://www.npmjs.com/package/@spectatorpuppet/puppet-kit'),
+  kitPackage: 'https://www.npmjs.com/package/@spectatorpuppet/puppet-kit',
 };
 
 // Prices from the go-to-market plan (2026-10-24): per month billed annually, monthly billing about 20% more.

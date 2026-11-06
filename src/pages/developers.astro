@@ -1,0 +1,23 @@
+---
+import Base from '../layouts/Base.astro';
+import { brand, links } from '../data/site';
+const steps: [string, string][] = [
+  ['Create a free account', 'Sign up, then open your organization and choose Developer. You get a sandbox organization with no billing to test in.'],
+  ['Describe your app', 'Paste a manifest: name, scopes it needs, events it sends and receives, actions, and the pages it adds to the portal. You get a test key and a webhook secret.'],
+  ['Handle signed webhooks', 'Puppet tells your server when an organization installs, configures or removes your app. The puppet-kit package checks the signature for you.'],
+  ['Read and act with scoped keys', 'Read the organization, members, plan and config your app was allowed to see, publish events, and answer actions from other apps.'],
+  ['Show your UI and sign people in', 'Mount pages inside the portal over the UI bridge (toasts, resize, theme) and sign people in with Puppet ID (OAuth with PKCE).'],
+  ['Submit for review', 'When it works in your sandbox, submit it. After approval you get live keys and any organization can install your app.'],
+];
+const faqs: [string, string][] = [
+  ['What does it cost to build an app?', 'Nothing. Developer accounts and sandboxes are free.'],
+  ['Which languages can I use?', 'Any. Puppet talks plain HTTPS and JSON with signed webhooks. The puppet-kit package for Node.js saves you the boilerplate.'],
+  ['How do organizations stay in control?', 'An admin sees in plain words what your app asks for before installing, and can remove it at any time. Your keys only reach organizations that installed your app.'],
+];
+---
+<Base title={`Build Apps on ${brand}: Developer Platform`} description="Build an app that plugs into Puppet: scoped keys, signed webhooks, events, actions, portal pages and Puppet ID sign-in, with a free sandbox." path="/developers" crumbs={[['Developers', '/developers']]} ld={[{ '@type': 'FAQPage', mainEntity: faqs.map(([q, a]) => ({ '@type': 'Question', name: q, acceptedAnswer: { '@type': 'Answer', text: a } })) }]}>
+<Fragment slot="hero"><h1>Build apps on {brand}</h1><p>Plug your product into every {brand} account: one install gives you the organization, its people and its plan, with keys that only reach what the admin allowed.</p><div class="row"><a class="btn" href={links.signup}>Start building free</a><a class="btn gh" href={links.developerDocs}>Read the quickstart</a></div></Fragment>
+<section><div class="w"><h2>From sign-up to live in six steps</h2><p class="lead">Most developers have a test install working in about 15 minutes.</p>
+<ol class="g">{steps.map(([t, d], i) => <li class="c" style="list-style:none"><h3>{i + 1}. {t}</h3><p>{d}</p></li>)}</ol></div></section>
+<section style="background:#fff"><div class="w prose"><h2>Questions</h2>{faqs.map(([q, a]) => <><h3>{q}</h3><p>{a}</p></>)}<p><a href={links.kitPackage}>puppet-kit on npm</a> · <a href="/legal/developer-terms">Developer terms</a></p></div></section>
+</Base>
