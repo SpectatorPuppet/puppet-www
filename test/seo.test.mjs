@@ -11,7 +11,7 @@ const route = (f) => '/' + f.slice(5).replace(/index\.html$/, '').replace(/\/$/,
 
 test('builds the expected pages', () => {
   const routes = files.map(route);
-  for (const r of ['/', '/tasks', '/booking', '/pricing', '/pricing/eur', '/pricing/inr', '/for/consultants', '/for/events', '/faq', '/compare', '/compare/clickup', '/compare/jira', '/blog', '/for/agencies']) assert.ok(routes.includes(r), r);
+  for (const r of ['/', '/tasks', '/booking', '/pricing', '/pricing/eur', '/pricing/inr', '/for/consultants', '/for/events', '/faq', '/compare', '/compare/clickup', '/compare/jira', '/blog', '/for/agencies', '/developers']) assert.ok(routes.includes(r), r);
 });
 
 for (const { f, html } of pages) {
