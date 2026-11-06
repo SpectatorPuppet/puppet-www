@@ -1,0 +1,15 @@
+---
+import Legal from '../../components/Legal.astro';
+import { brand, contactEmail, trialDays } from '../../data/site';
+---
+<Legal title="Developer terms" slug="developer-terms" updated="2026-11-06" description="Terms for companies that build and publish third-party apps on Puppet: review, scopes, data handling, suspension and security contact.">
+<h2>Who these apply to</h2><p>Anyone who registers an app in the Puppet developer portal, in addition to the <a href="/legal/terms">Terms of service</a>.</p>
+<h2>Review before going live</h2><p>Every app and every new release is reviewed by {brand} before organizations can install it. We may ask for changes or decline a release, and we tell you why.</p>
+<h2>Least-privilege scopes</h2><p>Ask only for the scopes your app needs to do what its listing says. Organizations see and approve each scope; asking for more later needs their approval again.</p>
+<h2>Data you receive</h2><p>Use data from installed organizations only to provide your app to them. Don't sell it or combine it across organizations. Keep it secure and tell us within 72 hours of a breach that affects it.</p>
+<h2>Uninstall and deletion</h2><p>When an organization uninstalls your app you receive an event. Delete that organization's data within 30 days, unless the law requires you to keep it, and stop calling the API for that installation.</p>
+<h2>Keys and webhooks</h2><p>Keep API keys secret, verify every webhook signature, and rotate keys you think are exposed. Your endpoint must use HTTPS and answer promptly; an endpoint that fails for 72 hours is suspended until fixed.</p>
+<h2>Suspension and revocation</h2><p>We may suspend an app that breaks these terms, puts organizations at risk, or stops working, and revoke it for serious or repeated problems. Revocation removes it from every organization.</p>
+<h2>Brand</h2><p>Don't present your app as made or endorsed by {brand}, copy our look, or use our name in your app's name.</p>
+<h2>Security contact</h2><p>Give us a security contact when you register, and report vulnerabilities in Puppet to <a href={`mailto:${contactEmail}`}>{contactEmail}</a> [security address].</p>
+</Legal>

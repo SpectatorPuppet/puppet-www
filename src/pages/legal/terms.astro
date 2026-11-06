@@ -1,0 +1,15 @@
+---
+import Legal from '../../components/Legal.astro';
+import { brand, contactEmail, trialDays } from '../../data/site';
+---
+<Legal title="Terms of service" slug="terms" updated="2026-11-06" description="The terms for using Puppet: accounts, organizations, acceptable use, trials, billing, cancellation and liability.">
+<h2>Who we are</h2><p>{brand} is run by [Company legal name], [registered address] ("we"). These terms apply when you create a Puppet ID, an organization, or use any product on the platform.</p>
+<h2>Your account and organization</h2><p>You need a Puppet ID to use the platform. Keep your sign-in safe and tell us at <a href={`mailto:${contactEmail}`}>{contactEmail}</a> if you think someone else used it. An organization belongs to its owners; owners and admins decide who joins, which products it uses, and who pays.</p>
+<h2>Acceptable use</h2><p>Don't use Puppet to break the law, send spam, harm other people's systems, probe our security without permission, or store content you have no right to. We may suspend an account that does, and we tell the owners why unless the law stops us.</p>
+<h2>Trials, billing and taxes</h2><p>Paid plans start with a {trialDays}-day free trial. Stripe takes payment; prices are shown before you confirm and include or add tax as your country requires. Plans renew each month or year until cancelled. See <a href="/legal/refunds">Refunds and cancellation</a>.</p>
+<h2>Third-party apps</h2><p>Some products in the catalog are built by other companies. When you install one you grant it the scopes you approve; its own terms and privacy policy cover what it does with your data. You can uninstall at any time.</p>
+<h2>Your data</h2><p>Your content stays yours. We process it to run the service as described in the <a href="/legal/privacy">Privacy policy</a>. You can export it, and it is deleted after you close the organization, as that policy says.</p>
+<h2>Availability and changes</h2><p>We work to keep Puppet available but don't promise it never fails. We tell owners by email at least 30 days before a change to these terms that reduces their rights.</p>
+<h2>Liability</h2><p>To the extent the law allows, our total liability in any 12 months is limited to what your organization paid us in that period. Nothing here limits liability that cannot be limited by law.</p>
+<h2>Law and contact</h2><p>These terms are governed by the laws of [jurisdiction]. Questions: <a href={`mailto:${contactEmail}`}>{contactEmail}</a>.</p>
+</Legal>

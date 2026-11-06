@@ -1,0 +1,12 @@
+---
+import Legal from '../../components/Legal.astro';
+import { brand, contactEmail, trialDays } from '../../data/site';
+---
+<Legal title="Refunds and cancellation" slug="refunds" updated="2026-11-06" description="How free trials, cancelling a plan, refunds, seat changes and third-party app charges work for Puppet plans.">
+<h2>Free trial</h2><p>Every paid plan starts with a {trialDays}-day free trial. Cancel before it ends and you are not charged.</p>
+<h2>Cancelling</h2><p>Owners and admins cancel from Billing in the account portal. The plan stays active until the end of the period you paid for, then stops renewing.</p>
+<h2>Refunds</h2><p>Monthly plans are not refunded for a part-used month. Annual plans cancelled within 14 days of a charge are refunded in full; after that, [policy]. If we charged you by mistake, or the service was down for a long time, write to us and we will make it right.</p>
+<h2>Seats and plan changes</h2><p>Adding seats or moving up a plan is charged pro rata. Removing seats or moving down applies from the next renewal.</p>
+<h2>Third-party apps</h2><p>Apps sold by other companies follow their own refund terms.</p>
+<h2>Contact</h2><p><a href={`mailto:${contactEmail}`}>{contactEmail}</a>, with your organization name and the charge date.</p>
+</Legal>

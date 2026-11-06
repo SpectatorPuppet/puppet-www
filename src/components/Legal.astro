@@ -1,0 +1,17 @@
+---
+// Shared frame for /legal/* pages. These are templates until Vivek (and ideally a lawyer) reviews
+// them: they stay noindex and show a banner until `reviewed` is set.
+import Base from '../layouts/Base.astro';
+import { brand } from '../data/site';
+interface Props { title: string; description: string; slug: string; updated: string; reviewed?: boolean }
+const { title, description, slug, updated, reviewed = false } = Astro.props;
+const path = `/legal/${slug}`;
+---
+<Base title={`${title} | ${brand}`} description={description} path={path} crumbs={[['Legal', '/legal/terms'], [title, path]]} noindex={!reviewed}>
+<Fragment slot="hero"><h1>{title}</h1><p>Last updated <time datetime={updated}>{new Date(`${updated}T00:00:00Z`).toLocaleDateString('en-GB', { day: 'numeric', month: 'long', year: 'numeric', timeZone: 'UTC' })}</time>.</p></Fragment>
+<section><div class="w prose">
+{!reviewed && <p class="legal-draft" role="note" style="border-left:4px solid #E10600;padding:12px 16px;background:#fff"><strong>Template under review.</strong> This text is a starting point and is not yet final. Words in [brackets] are filled in before launch.</p>}
+<slot />
+<p>Other policies: <a href="/legal/terms">Terms of service</a> · <a href="/legal/privacy">Privacy policy</a> · <a href="/legal/refunds">Refunds and cancellation</a> · <a href="/legal/developer-terms">Developer terms</a></p>
+</div></section>
+</Base>
