@@ -5,6 +5,9 @@ const { title, description, path = '/', ld = [], crumbs = [], type = 'website', 
 const site = Astro.site ?? new URL('https://example.com');
 const url = (p: string) => new URL(p, site).href;
 const canonical = url(path);
+const ogImage = url('/og.png');
+// Cloudflare Web Analytics (free, cookieless): on only when the deploy sets the site token.
+const analyticsToken = process.env.CF_ANALYTICS_TOKEN;
 // One JSON-LD graph per page: the organization, the page's own nodes, and breadcrumbs.
 const graph = [
   { '@type': 'Organization', '@id': url('/#org'), name: brand, url: url('/') },
@@ -17,11 +20,12 @@ const nav: [string, string][] = [['Tasks', '/tasks'], ['Booking', '/booking'], [
 ---
 <!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
 <title>{title}</title><meta name="description" content={description}><link rel="canonical" href={canonical}>
-<meta property="og:site_name" content={brand}><meta property="og:title" content={title}><meta property="og:description" content={description}><meta property="og:url" content={canonical}><meta property="og:type" content={type}><meta name="twitter:card" content="summary">
+<meta property="og:site_name" content={brand}><meta property="og:title" content={title}><meta property="og:description" content={description}><meta property="og:url" content={canonical}><meta property="og:type" content={type}><meta property="og:image" content={ogImage}><meta property="og:image:width" content="1200"><meta property="og:image:height" content="630"><meta property="og:image:alt" content={`${brand}: SaaS apps that work together`}><meta name="twitter:card" content="summary_large_image"><meta name="twitter:image" content={ogImage}>
 {noindex && <meta name="robots" content="noindex">}<meta name="theme-color" content="#2A2A2A"><link rel="icon" href="/favicon.svg" type="image/svg+xml">
 <link rel="sitemap" href="/sitemap-index.xml">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin><link href="https://fonts.googleapis.com/css2?family=Archivo:wght@600;800&family=IBM+Plex+Sans:wght@400;500;600&display=swap" rel="stylesheet">
 <script type="application/ld+json" set:html={json} />
+{analyticsToken && <script defer src="https://static.cloudflareinsights.com/beacon.min.js" data-cf-beacon={JSON.stringify({ token: analyticsToken })} is:inline></script>}
 <style is:global>
 :root{--ch:#2A2A2A;--si:#C0C0C0;--red:#E10600;--bg:#F6F6F4;--mu:#5c5c5c}
 *{box-sizing:border-box}body{margin:0;background:var(--bg);color:var(--ch);font:16px/1.6 "IBM Plex Sans",sans-serif}
