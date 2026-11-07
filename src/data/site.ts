@@ -49,9 +49,9 @@ export const pricing: ProductPricing[] = [
   {
     product: 'Booking', unit: 'per staff calendar / month',
     plans: [
-      { name: 'Basic', blurb: 'Online booking on your brand.', prices: { USD: 6, EUR: 6, INR: 249 }, features: ['Booking page on your domain', 'Staff schedules and holidays', 'Reminders', 'Deposits with Stripe'] },
+      { name: 'Basic', blurb: 'Online booking on your brand.', prices: { USD: 6, EUR: 6, INR: 249 }, features: ['Booking page on your domain', 'Staff schedules and holidays', 'Reminders', 'Answers from your FAQ'] },
       { name: 'BYO key', blurb: 'AI answers on your own key.', prices: { USD: 8, EUR: 8, INR: 349 }, features: ['Everything in Basic', 'AI answers from your FAQ and services', 'Booking through Claude (MCP)'], hot: true },
-      { name: 'Pro', blurb: 'Built-in AI, nothing to set up.', prices: { USD: 11, EUR: 10, INR: 449 }, features: ['Everything in Basic', 'Built-in AI answers', 'Priority support'] },
+      { name: 'Pro', blurb: 'Built-in AI, nothing to set up.', prices: { USD: 11, EUR: 10, INR: 449 }, features: ['Everything in Basic', 'Built-in AI answers', 'Deposits with Stripe', 'Priority support'] },
     ],
   },
 ];
