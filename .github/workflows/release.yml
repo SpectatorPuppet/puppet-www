@@ -1,0 +1,62 @@
+name: Release
+
+# Tags a release (TSK-074): Actions → Release → Run workflow, pick the branch (main for a real
+# release) and type the version, e.g. v1.0.0-rc.1 or v1.0.0. It refuses a commit whose checks are
+# not all green, then creates the tag and a GitHub release whose notes list the pull requests
+# merged since the previous tag. The website itself deploys from main on Cloudflare Pages; the
+# tag marks what went live with each platform release.
+on:
+  workflow_dispatch:
+    inputs:
+      version:
+        description: Release tag, like v1.0.0-rc.1 or v1.0.0
+        required: true
+        type: string
+
+permissions:
+  contents: read
+
+concurrency:
+  group: release
+  cancel-in-progress: false
+
+jobs:
+  tag:
+    name: Tag ${{ inputs.version }}
+    runs-on: ${{ vars.CI_SELF_HOSTED_RUNNER || 'ubuntu-latest' }}
+    timeout-minutes: 5
+    permissions:
+      contents: write
+      checks: read
+      statuses: read
+    env:
+      GH_TOKEN: ${{ github.token }}
+      VERSION: ${{ inputs.version }}
+      SHA: ${{ github.sha }}
+    steps:
+      - name: Version looks like a release tag
+        run: |
+          [[ $VERSION =~ ^v[0-9]+\.[0-9]+\.[0-9]+(-[0-9A-Za-z.]+)?$ ]] || {
+            echo "::error::$VERSION is not a release tag like v1.0.0 or v1.0.0-rc.1"; exit 1; }
+          if gh api "repos/$GITHUB_REPOSITORY/git/ref/tags/$VERSION" >/dev/null 2>&1; then
+            echo "::error::$VERSION already exists"; exit 1
+          fi
+      - name: Every check on the commit is green
+        run: |
+          # This run is a check on the same commit too, so it is left out.
+          runs=$(gh api --paginate "repos/$GITHUB_REPOSITORY/commits/$SHA/check-runs" \
+            --jq '.check_runs[] | select(.name != "Tag ${{ inputs.version }}") | "\(.status) \(.conclusion) \(.name)"')
+          echo "$runs"
+          [[ -n $runs ]] || { echo "::error::No checks ran on $SHA; run CI first"; exit 1; }
+          bad=$(printf '%s\n' "$runs" | grep -Ev '^completed (success|skipped|neutral) ' || true)
+          [[ -z $bad ]] || { echo "::error::Not every check is green on $SHA"; printf '%s\n' "$bad"; exit 1; }
+          state=$(gh api "repos/$GITHUB_REPOSITORY/commits/$SHA/status" --jq .state)
+          total=$(gh api "repos/$GITHUB_REPOSITORY/commits/$SHA/status" --jq .total_count)
+          [[ $total == 0 || $state == success ]] || { echo "::error::Commit status is $state"; exit 1; }
+      - name: Tag and publish the release notes
+        run: |
+          prerelease=()
+          [[ $VERSION == *-* ]] && prerelease=(--prerelease)
+          gh release create "$VERSION" --repo "$GITHUB_REPOSITORY" --target "$SHA" \
+            --title "$VERSION" --generate-notes "${prerelease[@]}"
+          echo "Tagged $VERSION at $SHA: $GITHUB_SERVER_URL/$GITHUB_REPOSITORY/releases/tag/$VERSION" >> "$GITHUB_STEP_SUMMARY"
