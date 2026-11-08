@@ -23,12 +23,14 @@ const nav: [string, string][] = [['Tasks', '/tasks'], ['Booking', '/booking'], [
 <meta property="og:site_name" content={brand}><meta property="og:title" content={title}><meta property="og:description" content={description}><meta property="og:url" content={canonical}><meta property="og:type" content={type}><meta property="og:image" content={ogImage}><meta property="og:image:width" content="1200"><meta property="og:image:height" content="630"><meta property="og:image:alt" content={`${brand}: SaaS apps that work together`}><meta name="twitter:card" content="summary_large_image"><meta name="twitter:image" content={ogImage}>
 {noindex && <meta name="robots" content="noindex">}<meta name="theme-color" content="#2A2A2A"><link rel="icon" href="/favicon.svg" type="image/svg+xml">
 <link rel="sitemap" href="/sitemap-index.xml">
-<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin><link href="https://fonts.googleapis.com/css2?family=Archivo:wght@600;800&family=IBM+Plex+Sans:wght@400;500;600&display=swap" rel="stylesheet">
+<link rel="preload" href="/fonts/inter-latin-wght-normal.woff2" as="font" type="font/woff2" crossorigin><link rel="preload" href="/fonts/archivo-latin-wght-normal.woff2" as="font" type="font/woff2" crossorigin>
 <script type="application/ld+json" set:html={json} />
 {analyticsToken && <script defer src="https://static.cloudflareinsights.com/beacon.min.js" data-cf-beacon={JSON.stringify({ token: analyticsToken })} is:inline></script>}
 <style is:global>
-:root{--ch:#2A2A2A;--si:#C0C0C0;--red:#E10600;--bg:#F6F6F4;--mu:#5c5c5c}
-*{box-sizing:border-box}body{margin:0;background:var(--bg);color:var(--ch);font:16px/1.6 "IBM Plex Sans",sans-serif}
+@font-face{font-family:Inter;font-style:normal;font-weight:100 900;font-display:swap;src:url(/fonts/inter-latin-wght-normal.woff2) format("woff2-variations")}
+@font-face{font-family:Archivo;font-style:normal;font-weight:100 900;font-display:swap;src:url(/fonts/archivo-latin-wght-normal.woff2) format("woff2-variations")}
+:root{--ch:#2A2A2A;--si:#C0C0C0;--red:#E10600;--bg:#F6F6F4;--mu:#5c5c5c;--ease:cubic-bezier(.2,.8,.2,1)}
+*{box-sizing:border-box}body{margin:0;background:var(--bg);color:var(--ch);font:16px/1.6 Inter,system-ui,sans-serif;font-feature-settings:"cv11","ss01";-webkit-font-smoothing:antialiased}
 h1,h2,h3{font-family:Archivo,sans-serif;line-height:1.15;margin:0 0 .5rem}h2{font-size:clamp(26px,3.4vw,38px)}
 .w{max-width:1160px;margin:auto;padding:0 20px}a{color:inherit}
 header{background:var(--ch);color:#fff;position:sticky;top:0;z-index:3}header .w{display:flex;align-items:center;gap:22px;height:66px}
@@ -52,7 +54,7 @@ section{padding:80px 0}.lead{color:var(--mu);font-size:18px;max-width:40em;margi
 .stat{font:800 44px Archivo;color:var(--red)}
 .q{font-size:17px}.q cite{display:block;margin-top:12px;font-style:normal;font-weight:600;color:var(--ch)}
 .pr .hot{border:2px solid var(--red);position:relative}.pr .hot:before{content:"Most popular";position:absolute;top:-12px;left:20px;background:var(--red);color:#fff;font-size:12px;padding:2px 10px;border-radius:10px}
-.price{font:800 40px Archivo}.price small{font:400 15px "IBM Plex Sans";color:var(--mu)}.pr ul{padding-left:18px;color:var(--mu)}
+.price{font:800 40px Archivo}.price small{font:400 15px Inter,system-ui,sans-serif;color:var(--mu)}.pr ul{padding-left:18px;color:var(--mu)}
 details{background:#fff;border:1px solid #e2e2e2;border-radius:12px;padding:16px 20px;margin-bottom:10px}summary{font-weight:600;cursor:pointer}
 .cta{background:var(--red);color:#fff;border-radius:20px;padding:56px 24px;text-align:center}.cta .btn{background:var(--ch)}
 .stores{display:flex;gap:10px;justify-content:center;margin-top:16px}.stores span{border:1px solid #fff;border-radius:8px;padding:8px 14px;font-size:13px}
@@ -69,6 +71,21 @@ table{width:100%;border-collapse:collapse;background:#fff;border-radius:12px;ove
 .tw{overflow-x:auto}.prose{max-width:720px}.prose p{font-size:18px}.meta{color:var(--mu);font-size:14px}
 .ph{font-size:13px;color:var(--mu)}
 @media (max-width:860px){.mm{display:block}}
+/* Premium layer: CSS only, transform/opacity animations, no JavaScript. */
+:focus-visible{outline:2px solid var(--red);outline-offset:2px}
+.btn{transition:transform .12s var(--ease),filter .12s var(--ease)}.btn:hover{filter:brightness(1.08)}.btn:active{transform:scale(.97)}
+.c{position:relative;background:linear-gradient(180deg,rgb(42 42 42/.025),transparent 40%) #fff;border-color:rgb(42 42 42/.1);transition:transform .18s var(--ease)}
+.c::after{content:"";position:absolute;inset:0;border-radius:inherit;box-shadow:0 12px 32px -12px rgb(0 0 0/.22);opacity:0;transition:opacity .18s var(--ease);pointer-events:none}
+.c:hover{transform:translateY(-2px)}.c:hover::after{opacity:1}
+.dark .c{background:linear-gradient(180deg,rgb(255 255 255/.04),transparent 40%) #333;border-color:rgb(255 255 255/.1)}
+.pr .hot{border:1px solid transparent;background:linear-gradient(#fff,#fff) padding-box,linear-gradient(160deg,var(--red),rgb(225 6 0/.25) 60%,#e2e2e2) border-box}
+@supports (backdrop-filter:blur(1px)){header{background:rgb(42 42 42/.86);backdrop-filter:blur(14px) saturate(140%);box-shadow:inset 0 -1px 0 rgb(255 255 255/.08)}}
+@supports (animation-timeline:view()){@media (prefers-reduced-motion:no-preference){
+main section>.w{animation:rise linear both;animation-timeline:view();animation-range:entry 0% entry 40%}
+}}
+@keyframes rise{from{opacity:0;transform:translateY(16px)}to{opacity:1;transform:none}}
+@media (prefers-reduced-motion:reduce){.btn,.c,.c::after{transition:none}.c:hover{transform:none}}
+@media (prefers-reduced-transparency:reduce){header{background:var(--ch);backdrop-filter:none}}
 </style></head><body>
 <header><div class="w"><a class="logo" href="/">puppet<i>.</i></a><nav aria-label="Main">{nav.map(([l, h]) => <a href={h}>{l}</a>)}</nav><span class="sp"></span><a class="hide-m" style="color:#C0C0C0;text-decoration:none" href={links.login}>Sign in</a><a class="btn hide-m" href={links.signup}>Start trial</a>
 <details class="mm"><summary aria-label="Menu">☰</summary><div>{nav.map(([l, h]) => <a href={h}>{l}</a>)}<a href={links.login}>Sign in</a><a href={links.signup}>Start trial</a></div></details></div></header>
