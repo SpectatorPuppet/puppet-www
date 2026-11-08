@@ -48,7 +48,7 @@ test('internal links resolve to built pages', () => {
   const routes = new Set(files.map(route));
   for (const { f, html } of pages)
     for (const [, href] of html.matchAll(/href="(\/[^"#?]*)"/g)) {
-      if (/\.(xml|svg|txt)$/.test(href)) continue;
+      if (/\.(xml|svg|txt|woff2)$/.test(href)) continue;
       assert.ok(routes.has(href.replace(/\/$/, '') || '/'), `${f} links to missing ${href}`);
     }
 });
