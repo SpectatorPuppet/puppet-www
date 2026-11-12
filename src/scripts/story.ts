@@ -37,7 +37,7 @@ function hero() {
   // 0 → 0.45: copy drifts up and fades out.
   tl.to(q(root, '[data-beat="copy"]'), { yPercent: -60, opacity: 0, duration: 0.45 }, 0);
   tl.to(q(root, '[data-beat="hint"]'), { opacity: 0, duration: 0.1 }, 0);
-  // 0 → 1: the board goes from tilted back in 3D to flat and full width, rising into the space the copy left.
+  // 0 → 1: the portal goes from tilted back in 3D to flat and full width, rising into the space the copy left.
   tl.fromTo(
     q(root, '[data-beat="app"]'),
     { rotateX: 32, scale: 0.78, y: 0 },
@@ -59,22 +59,22 @@ function walkthrough() {
   // The timeline is 3 units long, one per beat, so labels line up with the thirds of the track.
   tl.to(q(root, '[data-beat="prog"]'), { scaleX: 1, ease: 'none', duration: 3 }, 0);
 
-  // Beat 1 (0–1): zoom into the Testing column and pop out the ticket's acceptance tests.
+  // Beat 1 (0–1): zoom into the installed apps and pop out the one-sign-in card.
   tl.addLabel('b1', 0)
-    .to(q(board, '[data-beat="cols"]'), { scale: 1.18, duration: 0.4 }, 'b1+=0.05')
-    .to(q(board, '[data-beat="focus-card"]'), { outlineColor: '#e10600', duration: 0.2 }, 'b1+=0.2')
+    .to(q(board, '[data-beat="main"]'), { scale: 1.18, duration: 0.4 }, 'b1+=0.05')
+    .to(q(board, '[data-beat="focus-tile"]'), { outlineColor: '#e10600', duration: 0.2 }, 'b1+=0.2')
     .fromTo(q(board, '[data-beat="tests"]'), { autoAlpha: 0, y: 30, scale: 0.92 }, { autoAlpha: 1, y: 0, scale: 1, duration: 0.35 }, 'b1+=0.3');
 
-  // Beat 2 (1–2): swap callout, un-zoom, slide in the Ask panel and fill its bars.
+  // Beat 2 (1–2): swap callout, un-zoom, slide in the AI and usage panel and fill its bars.
   tl.addLabel('b2', 1)
     .to(steps[0], { autoAlpha: 0, y: -20, duration: 0.2 }, 'b2')
     .fromTo(steps[1], { autoAlpha: 0, y: 20 }, { autoAlpha: 1, y: 0, duration: 0.25 }, 'b2+=0.15')
     .to(q(board, '[data-beat="tests"]'), { autoAlpha: 0, y: -20, duration: 0.2 }, 'b2')
-    .to(q(board, '[data-beat="cols"]'), { scale: 1, duration: 0.3 }, 'b2')
+    .to(q(board, '[data-beat="main"]'), { scale: 1, duration: 0.3 }, 'b2')
     .fromTo(q(board, '[data-beat="panel"]'), { autoAlpha: 1, xPercent: 105 }, { xPercent: 0, duration: 0.35 }, 'b2+=0.15')
     .fromTo(qa(board, '[data-beat="bar"]'), { clipPath: 'inset(0 100% 0 0)' }, { clipPath: 'inset(0 0% 0 0)', stagger: 0.08, duration: 0.3 }, 'b2+=0.45');
 
-  // Beat 3 (2–3): panel leaves, the sign-off modal expands, then its badge flips to approved.
+  // Beat 3 (2–3): panel leaves, the invite modal expands, then its badge flips to joined.
   tl.addLabel('b3', 2)
     .to(steps[1], { autoAlpha: 0, y: -20, duration: 0.2 }, 'b3')
     .fromTo(steps[2], { autoAlpha: 0, y: 20 }, { autoAlpha: 1, y: 0, duration: 0.25 }, 'b3+=0.15')

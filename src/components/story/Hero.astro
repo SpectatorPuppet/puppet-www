@@ -1,19 +1,19 @@
 ---
 // Section 1: hero and app reveal. Track is 250vh (set in story.css under .story-on); the stage
-// sticks for the whole track while story.ts scrubs the copy up and the board from tilted to flat.
-import Board from './Board.astro';
+// sticks for the whole track while story.ts scrubs the copy up and the portal from tilted to flat.
+import Portal from './Portal.astro';
 import { links, trialDays, launchOffer } from '../../data/site';
 ---
 <section class="s-hero track" data-story="hero" aria-labelledby="hero-h">
   <div class="stage">
     <div class="copy" data-beat="copy">
-      <p class="kicker">Tasks and Booking on one account</p>
-      <h1 id="hero-h">Run your client work and your bookings in one place</h1>
-      <p class="sub">Boards your team actually finishes and a booking page that answers customers for you, with AI that doesn't cost extra per seat.</p>
+      <p class="kicker">The Puppet account</p>
+      <h1 id="hero-h">One account for every app your business runs</h1>
+      <p class="sub">Sign in once, pay one bill and decide who gets into what. Every Puppet app plugs into the same account, with AI you control.</p>
       <div class="row"><a class="btn" href={links.signup}>Start {trialDays}-day trial</a><a class="btn gh" href={links.demo}>Book a demo</a></div>
       <p class="trust"><b>Launch offer:</b> {launchOffer} <a href={links.tasksDemo}>Try the live demo</a></p>
     </div>
-    <div class="persp"><div class="tilt" data-beat="app"><Board /></div></div>
+    <div class="persp"><div class="tilt" data-beat="app"><Portal /></div></div>
     <p class="hint" data-beat="hint" aria-hidden="true">Scroll</p>
   </div>
 </section>

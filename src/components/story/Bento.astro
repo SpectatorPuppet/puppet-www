@@ -28,17 +28,19 @@ const themes = ['#e10600', '#1d4ed8', '#15803d', '#b45309', '#7c3aed'];
         <span class="float f1" data-speed="-1.1" aria-hidden="true">Guest · can comment</span>
       </article>
       <article class="tile t-book" data-speed="-0.2">
-        <h3>A booking page that answers</h3><p>Customers pick a time and get answers from your own FAQ.</p>
-        <div class="slots" aria-hidden="true"><span>09:15</span><span>11:00</span><span class="on">14:00</span><span>15:45</span><span>17:30</span><span>18:15</span></div>
-        <span class="float f2" data-speed="-0.9" aria-hidden="true">Reminder sent</span>
+        <h3>Apps that plug in</h3><p>Turn apps on from the catalog. They share your sign-in, team, billing and brand.</p>
+        <div class="slots" aria-hidden="true"><span>Catalog</span><span class="on">Installed</span><span>Plans</span><span>Access</span><span>Usage</span><span>Logs</span></div>
+        <span class="float f2" data-speed="-0.9" aria-hidden="true">App connected</span>
       </article>
       <article class="tile t-data dark-t" data-speed="0.5">
         <h3>Isolated data</h3><p>Each customer's data separated in the database.</p>
         <div class="stack" aria-hidden="true"><i></i><i></i><i></i></div>
       </article>
       <article class="tile t-voice" data-speed="-0.5">
-        <h3>Private voice notes</h3><p>Voice audio deleted after transcription.</p>
-        <div class="wave" aria-hidden="true">{Array.from({ length: 28 }, (_, i) => <i style={`--h:${20 + ((i * 37) % 70)}%`}></i>)}</div>
+        <h3>An API for your own tools</h3><p>Read-only organization API keys for scripts and reports. Each key is shown once.</p>
+        <pre class="code" aria-hidden="true"><span class="c1">GET</span> /v1/org/members
+<span class="c1">Authorization:</span> Bearer pk_live_…9f2c
+<span class="c2">200</span> · 12 members</pre>
       </article>
     </div>
   </div>
@@ -57,9 +59,9 @@ const themes = ['#e10600', '#1d4ed8', '#15803d', '#b45309', '#7c3aed'];
 .tg i{width:38px;height:22px;border-radius:11px;background:#c0c0c0;position:relative}.tg i:after{content:"";position:absolute;top:3px;left:3px;width:16px;height:16px;border-radius:50%;background:#fff}
 .tg i.sw-on{background:#e10600}.tg i.sw-on:after{left:19px}
 .avs{display:flex;margin-top:auto}.avs span{width:44px;height:44px;margin-right:-10px;border-radius:50%;border:3px solid #f3f3f4;background:#2a2a2a;color:#fff;font-size:13px;font-weight:700;display:grid;place-items:center}.avs .g{background:#fff4e5;color:#8a4b00}
-.slots{display:grid;grid-template-columns:repeat(6,minmax(0,1fr));gap:8px;margin-top:auto}.slots span{padding:12px 0;border-radius:10px;background:#fff;text-align:center;font:500 14px "IBM Plex Mono",monospace;border:1px solid rgb(42 42 42/.12)}.slots .on{border:2px solid #e10600;background:#fde8e7;color:#a8071a;font-weight:700}
+.slots{display:grid;grid-template-columns:repeat(6,minmax(0,1fr));gap:8px;margin-top:auto}.slots span{padding:12px 0;border-radius:10px;background:#fff;text-align:center;font:600 13px Inter,system-ui,sans-serif;border:1px solid rgb(42 42 42/.12)}.slots .on{border:2px solid #e10600;background:#fde8e7;color:#a8071a;font-weight:700}
 .stack{position:relative;height:90px;margin-top:auto}.stack i{position:absolute;left:0;right:30%;height:44px;border-radius:12px;background:#3a3a3d;border:1px solid #555}.stack i:nth-child(2){top:18px;left:8%;right:22%;background:#444}.stack i:nth-child(3){top:36px;left:16%;right:14%;background:#e10600;border-color:#e10600}
-.wave{display:flex;align-items:center;gap:4px;height:80px;margin-top:auto}.wave i{flex:1;height:var(--h);border-radius:3px;background:#2a2a2a}
+.code{margin:auto 0 0;padding:14px;border-radius:12px;background:#1f1f22;color:#e4e4e7;font:500 13px/1.6 "IBM Plex Mono",ui-monospace,monospace;white-space:pre-wrap;word-break:break-all}.c1{color:#c0c0c0}.c2{color:#7ee2a0}
 .float{position:absolute;padding:8px 12px;border-radius:999px;background:#fff;font-size:13px;font-weight:700;box-shadow:0 14px 30px -10px rgb(0 0 0/.35);white-space:nowrap}
 .f1{right:16px;top:-14px;color:#8a4b00}.f2{right:24px;top:-14px;color:#14632f}
 @media (max-width:900px){.grid{grid-template-columns:repeat(2,minmax(0,1fr))}.tile{grid-column:span 2!important}.slots{grid-template-columns:repeat(3,minmax(0,1fr))}}

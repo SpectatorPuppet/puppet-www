@@ -1,17 +1,17 @@
 ---
 // Section 2: pinned walkthrough. Track is 300vh; three beats at 0-33%, 33-66% and 66-100% of it.
-// Each beat fades one callout in on the side and changes what the board shows (see story.ts).
-import Board from './Board.astro';
+// Each beat fades one callout in on the side and changes what the portal shows (see story.ts).
+import Portal from './Portal.astro';
 const steps = [
-  { k: '01', h: 'Done means tested', p: 'Link each acceptance criterion to a test. When CI passes, the ticket can close. Not before.' },
-  { k: '02', h: 'Ask your board', p: 'Ask what is slowing the release and get an answer from your own tickets, with the numbers behind it.' },
-  { k: '03', h: 'Clients sign off in the open', p: 'Send a release to the client portal. They approve or ask for changes without an account.' },
+  { k: '01', h: 'One sign-in for every app', p: 'Your team signs in once with their Puppet account and opens any app you have turned on.' },
+  { k: '02', h: 'One bill, clear usage', p: 'Seats, plans and AI usage for every app on one page, with a monthly AI budget you set.' },
+  { k: '03', h: 'Decide who gets in', p: 'Invite staff and outside guests, then choose their role in each app. Take access away in one click.' },
 ];
 ---
 <section class="s-walk track" data-story="walk" aria-labelledby="walk-h">
   <div class="stage">
     <div class="side-copy">
-      <h2 id="walk-h">Project management that finishes</h2>
+      <h2 id="walk-h">Run your whole business from one account</h2>
       <ol class="steps">
         {steps.map((s, i) => (
           <li class="step" data-beat="step" data-i={i}><span class="k">{s.k}</span><h3>{s.h}</h3><p>{s.p}</p></li>
@@ -19,7 +19,7 @@ const steps = [
       </ol>
       <div class="prog" aria-hidden="true"><i data-beat="prog"></i></div>
     </div>
-    <div class="frame"><Board id="walk-board" /></div>
+    <div class="frame"><Portal id="walk-board" /></div>
   </div>
 </section>
 <style>

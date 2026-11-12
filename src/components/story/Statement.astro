@@ -2,15 +2,14 @@
 // Section 4: words light up from 0.2 to 1 opacity, tied to scroll (track 200vh, start "top top",
 // end "bottom bottom"). Below it the counters count up once when they enter the viewport.
 // Every number here comes from src/data/site.ts or product facts; no invented metrics.
-import { trialDays, pricing } from '../../data/site';
-const line = 'Boards your team actually finishes. A booking page that answers for you. AI you control, on one account.';
+import { trialDays } from '../../data/site';
+const line = 'One sign-in for your whole team. One bill for every app. AI you control, and your data kept apart from everyone else.';
 const words = line.split(' ');
-const tasksFrom = pricing[0].plans[0].prices.USD;
 const stats = [
   { n: trialDays, pre: '', suf: '', label: 'day trial to try everything' },
-  { n: tasksFrom, pre: '$', suf: '', label: 'per user a month for Tasks' },
+  { n: 1, pre: '', suf: '', label: 'sign-in for every app' },
+  { n: 1, pre: '', suf: '', label: 'bill for the whole team' },
   { n: 3, pre: '', suf: '', label: 'ways to run AI: built in, local or your key' },
-  { n: 1, pre: '', suf: '', label: 'sign-in and bill for every app' },
 ];
 ---
 <section class="s-say" data-story="say" aria-labelledby="say-h">
