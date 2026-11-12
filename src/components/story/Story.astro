@@ -1,0 +1,39 @@
+---
+// The home page's scroll story: hero and walkthrough here; Bento and Statement are placed by the
+// page (they sit further down). One script drives all four.
+// Without JavaScript, or with prefers-reduced-motion, the sections are a normal static page.
+// story.ts adds .story-on to <html> only when it will animate; the tall tracks below apply then.
+import Hero from './Hero.astro';
+import Walkthrough from './Walkthrough.astro';
+---
+<Hero />
+<Walkthrough />
+<style is:global>
+/* Scroll lengths. Change a track's height to make its animation longer or shorter. */
+.story-on [data-story="hero"].track{height:250vh}
+.story-on [data-story="walk"].track{height:300vh}
+.story-on .t-say{height:200vh}
+/* Stages stick under the 66px site header for the length of their track. */
+.story-on .track>.stage{position:sticky;top:66px;height:calc(100vh - 66px);box-sizing:border-box}
+.story-on [data-story="hero"] .stage{justify-content:flex-start;overflow:hidden;padding-top:min(10vh,88px)}
+.story-on [data-story="hero"] .hint{display:block;position:absolute;bottom:18px}
+.story-on [data-story="walk"] .stage{padding-top:0;padding-bottom:0}
+.story-on [data-story="walk"] .prog{display:block}
+.story-on [data-story="walk"] .steps{position:relative}
+/* Callouts stack in one place and cross-fade. */
+.story-on [data-story="walk"] .step{grid-area:1/1}
+.story-on [data-story="walk"] .steps{display:grid}
+.story-on [data-story="walk"] .step:not(:first-child){opacity:0}
+@media (max-width:900px){
+  .story-on [data-story="walk"] .stage{grid-template-rows:auto auto;align-content:center;padding-top:20px}
+  .story-on [data-story="hero"] .hint{display:none}
+  .story-on [data-story="walk"] h2{margin-bottom:12px}
+}
+</style>
+<script>
+  // Load the animation code only when it will run, so reduced-motion and data-saver visitors
+  // never download GSAP.
+  const reduce = matchMedia('(prefers-reduced-motion: reduce)').matches;
+  const save = (navigator as Navigator & { connection?: { saveData?: boolean } }).connection?.saveData;
+  if (!reduce && !save) import('../../scripts/story').then((m) => m.start());
+</script>

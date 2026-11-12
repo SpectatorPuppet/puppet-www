@@ -1,0 +1,39 @@
+---
+// Section 4: words light up from 0.2 to 1 opacity, tied to scroll (track 200vh, start "top top",
+// end "bottom bottom"). Below it the counters count up once when they enter the viewport.
+// Every number here comes from src/data/site.ts or product facts; no invented metrics.
+import { trialDays, pricing } from '../../data/site';
+const line = 'Boards your team actually finishes. A booking page that answers for you. AI you control, on one account.';
+const words = line.split(' ');
+const tasksFrom = pricing[0].plans[0].prices.USD;
+const stats = [
+  { n: trialDays, pre: '', suf: '', label: 'day trial to try everything' },
+  { n: tasksFrom, pre: '$', suf: '', label: 'per user a month for Tasks' },
+  { n: 3, pre: '', suf: '', label: 'ways to run AI: built in, local or your key' },
+  { n: 1, pre: '', suf: '', label: 'sign-in and bill for every app' },
+];
+---
+<section class="s-say" data-story="say" aria-labelledby="say-h">
+  <div class="track t-say">
+    <div class="stage">
+      <h2 id="say-h" class="say"><span class="sr">{line}</span>{words.map((w) => <span class="wd" data-beat="word" aria-hidden="true">{w} </span>)}</h2>
+    </div>
+  </div>
+  <div class="w stats">
+    {stats.map((s) => (
+      <div class="st"><p class="num">{s.pre}<span data-count={s.n}>{s.n}</span>{s.suf}</p><p class="lb">{s.label}</p></div>
+    ))}
+  </div>
+</section>
+<style>
+.s-say{background:#1f1f22;color:#fff;padding:0 0 96px}
+.stage{display:flex;align-items:center;max-width:1100px;margin:auto;padding:96px 20px 48px}
+.say{font-size:clamp(32px,5.2vw,68px);line-height:1.08;letter-spacing:-.025em;margin:0}
+.sr{position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0 0 0 0);white-space:nowrap}
+.stats{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:20px}
+.st{padding:24px;border-radius:18px;background:#2a2a2a;border:1px solid rgb(255 255 255/.08)}
+.num{margin:0;font:800 clamp(44px,5vw,64px)/1 Archivo,sans-serif;color:#ff6b62;font-variant-numeric:tabular-nums}
+.lb{margin:10px 0 0;color:#c0c0c0}
+@media (max-width:900px){.stats{grid-template-columns:repeat(2,minmax(0,1fr))}}
+@media (max-width:480px){.stats{grid-template-columns:1fr}}
+</style>

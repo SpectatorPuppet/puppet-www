@@ -1,3 +1,1 @@
-{"name":"@spectatorpuppet/www","private":true,"type":"module",
-"scripts":{"dev":"astro dev","build":"astro build","preview":"astro preview","test":"astro build && node --test test/*.test.mjs"},
-"dependencies":{"astro":"5.14.1","@astrojs/sitemap":"3.6.0"}}
+{"name":"@spectatorpuppet/www","private":true,"type":"module","scripts":{"dev":"astro dev","build":"astro build","preview":"astro preview","test":"astro build && node --test test/*.test.mjs"},"dependencies":{"@astrojs/sitemap":"3.6.0","astro":"5.14.1","gsap":"3.13.0"}}

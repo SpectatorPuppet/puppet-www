@@ -32,7 +32,10 @@ for (const { f, html } of pages) {
     for (const n of ld['@graph']) assert.ok(n['@type'], 'node has @type');
   });
   test(`${f}: no client js, labelled images`, () => {
-    assert.ok(!/<script(?![^>]*ld\+json)/.test(html));
+    // Only the home page runs a script: the scroll story, self-hosted from /_astro/.
+    const scripts = [...html.matchAll(/<script(?![^>]*ld\+json)([^>]*)>/g)].map((m) => m[1]);
+    if (route(f) === '/') assert.ok(scripts.length === 1 && /type="module" src="\/_astro\/[^"]+\.js"/.test(scripts[0]), scripts.join());
+    else assert.equal(scripts.length, 0);
     assert.ok(!/<svg(?![^>]*(aria-label|aria-hidden))[^>]*role="img"/.test(html));
   });
 }

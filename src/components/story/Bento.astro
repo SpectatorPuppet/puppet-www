@@ -1,0 +1,66 @@
+---
+// Section 3: exploded UI layers. Not pinned: each [data-speed] element drifts on the y axis at its
+// own rate while the grid crosses the viewport (start "top bottom" to end "bottom top" in story.ts).
+// Positive speed moves slower than the page (sits back), negative moves faster (floats forward).
+const themes = ['#e10600', '#1d4ed8', '#15803d', '#b45309', '#7c3aed'];
+---
+<section class="s-bento" data-story="bento" aria-labelledby="bento-h">
+  <div class="w">
+    <h2 id="bento-h">Built for business, secure by default</h2>
+    <p class="lead">The features other tools save for their most expensive plan.</p>
+    <div class="grid">
+      <article class="tile t-brand" data-speed="0.6">
+        <h3>Your brand</h3><p>Themes, logo, colors and custom domain.</p>
+        <div class="sw" aria-hidden="true">{themes.map((c, i) => <span style={`background:${c}`} class={i === 0 ? 'on' : ''}></span>)}</div>
+        <div class="dom" aria-hidden="true"><span>booking.</span>yourbrand.com</div>
+      </article>
+      <article class="tile t-ai" data-speed="-0.4">
+        <h3>AI you control</h3><p>Included, local, or your own key.</p>
+        <ul class="tg" aria-hidden="true">
+          <li><span>Built-in AI</span><i class="sw-on"></i></li>
+          <li><span>Free local model</span><i></i></li>
+          <li><span>Your own key</span><i></i></li>
+        </ul>
+      </article>
+      <article class="tile t-roles" data-speed="0.25">
+        <h3>Roles and guests</h3><p>Fine-grained permissions for staff and clients.</p>
+        <div class="avs" aria-hidden="true"><span>MC</span><span>AK</span><span>VB</span><span class="g">JL</span></div>
+        <span class="float f1" data-speed="-1.1" aria-hidden="true">Guest · can comment</span>
+      </article>
+      <article class="tile t-book" data-speed="-0.2">
+        <h3>A booking page that answers</h3><p>Customers pick a time and get answers from your own FAQ.</p>
+        <div class="slots" aria-hidden="true"><span>09:15</span><span>11:00</span><span class="on">14:00</span><span>15:45</span><span>17:30</span><span>18:15</span></div>
+        <span class="float f2" data-speed="-0.9" aria-hidden="true">Reminder sent</span>
+      </article>
+      <article class="tile t-data dark-t" data-speed="0.5">
+        <h3>Isolated data</h3><p>Each customer's data separated in the database.</p>
+        <div class="stack" aria-hidden="true"><i></i><i></i><i></i></div>
+      </article>
+      <article class="tile t-voice" data-speed="-0.5">
+        <h3>Private voice notes</h3><p>Voice audio deleted after transcription.</p>
+        <div class="wave" aria-hidden="true">{Array.from({ length: 28 }, (_, i) => <i style={`--h:${20 + ((i * 37) % 70)}%`}></i>)}</div>
+      </article>
+    </div>
+  </div>
+</section>
+<style>
+.s-bento{background:#fff;overflow:clip}
+.s-bento h2{font-size:clamp(28px,3.6vw,46px);letter-spacing:-.02em}
+.grid{display:grid;grid-template-columns:repeat(6,minmax(0,1fr));grid-auto-rows:minmax(220px,auto);gap:18px}
+.tile{position:relative;display:flex;flex-direction:column;gap:6px;padding:24px;border-radius:20px;background:#f3f3f4;border:1px solid rgb(42 42 42/.08);will-change:transform}
+.tile h3{font-size:21px;margin:0}.tile p{margin:0;color:#5c5c5c}
+.t-brand{grid-column:span 4}.t-ai{grid-column:span 2}.t-roles{grid-column:span 2}.t-book{grid-column:span 4}.t-data{grid-column:span 3}.t-voice{grid-column:span 3}
+.dark-t{background:#2a2a2a;color:#fff}.dark-t p{color:#c0c0c0}
+.sw{display:flex;gap:10px;margin-top:auto}.sw span{width:40px;height:40px;border-radius:12px}.sw .on{outline:3px solid #2a2a2a;outline-offset:3px}
+.dom{align-self:flex-start;margin-top:14px;padding:8px 14px;border-radius:10px;background:#fff;font:500 14px "IBM Plex Mono",monospace;box-shadow:0 8px 20px -10px rgb(0 0 0/.3)}.dom span{color:#b30a05}
+.tg{list-style:none;margin:auto 0 0;padding:0;display:grid;gap:8px}.tg li{display:flex;justify-content:space-between;align-items:center;padding:10px 12px;border-radius:12px;background:#fff;font-size:14px;font-weight:600}
+.tg i{width:38px;height:22px;border-radius:11px;background:#c0c0c0;position:relative}.tg i:after{content:"";position:absolute;top:3px;left:3px;width:16px;height:16px;border-radius:50%;background:#fff}
+.tg i.sw-on{background:#e10600}.tg i.sw-on:after{left:19px}
+.avs{display:flex;margin-top:auto}.avs span{width:44px;height:44px;margin-right:-10px;border-radius:50%;border:3px solid #f3f3f4;background:#2a2a2a;color:#fff;font-size:13px;font-weight:700;display:grid;place-items:center}.avs .g{background:#fff4e5;color:#8a4b00}
+.slots{display:grid;grid-template-columns:repeat(6,minmax(0,1fr));gap:8px;margin-top:auto}.slots span{padding:12px 0;border-radius:10px;background:#fff;text-align:center;font:500 14px "IBM Plex Mono",monospace;border:1px solid rgb(42 42 42/.12)}.slots .on{border:2px solid #e10600;background:#fde8e7;color:#a8071a;font-weight:700}
+.stack{position:relative;height:90px;margin-top:auto}.stack i{position:absolute;left:0;right:30%;height:44px;border-radius:12px;background:#3a3a3d;border:1px solid #555}.stack i:nth-child(2){top:18px;left:8%;right:22%;background:#444}.stack i:nth-child(3){top:36px;left:16%;right:14%;background:#e10600;border-color:#e10600}
+.wave{display:flex;align-items:center;gap:4px;height:80px;margin-top:auto}.wave i{flex:1;height:var(--h);border-radius:3px;background:#2a2a2a}
+.float{position:absolute;padding:8px 12px;border-radius:999px;background:#fff;font-size:13px;font-weight:700;box-shadow:0 14px 30px -10px rgb(0 0 0/.35);white-space:nowrap}
+.f1{right:16px;top:-14px;color:#8a4b00}.f2{right:24px;top:-14px;color:#14632f}
+@media (max-width:900px){.grid{grid-template-columns:repeat(2,minmax(0,1fr))}.tile{grid-column:span 2!important}.slots{grid-template-columns:repeat(3,minmax(0,1fr))}}
+</style>

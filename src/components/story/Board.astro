@@ -1,0 +1,79 @@
+---
+// The Tasks board mockup shared by the hero and the walkthrough. Pure markup and CSS, no images.
+// data-beat hooks are what src/scripts/story.ts animates; they do nothing without the script.
+interface Props { id?: string }
+const { id } = Astro.props;
+const cols = [
+  { name: 'To do', cards: [['WEB-17', 'Supply brand fonts', 'Content'], ['WEB-18', 'Cookie settings page', 'Build']] },
+  { name: 'In progress', cards: [['WEB-12', 'Contact form validation', 'Build'], ['WEB-15', 'Illustration set', 'Design']] },
+  { name: 'Testing', cards: [['WEB-9', 'Cookie banner copy', 'Content'], ['WEB-2', 'Mobile menu focus trap', 'Bug']] },
+];
+---
+<div class="app" id={id} role="img" aria-label="Puppet Tasks board with three columns of tickets">
+  <div class="bar"><span class="dots" aria-hidden="true"><i></i><i></i><i></i></span><span class="url">tasks · Website relaunch</span></div>
+  <div class="body">
+    <aside class="side" aria-hidden="true"><b>Projects</b><span class="on">Website relaunch</span><span>Mobile app</span><span>Brand refresh</span><b>Views</b><span class="on">Board</span><span>Insights</span><span>Client portal</span></aside>
+    <div class="cols" data-beat="cols">
+      {cols.map((c, ci) => (
+        <div class="col"><p class="ch">{c.name}<em>{c.cards.length}</em></p>
+          {c.cards.map(([k, t, tag], i) => (
+            <div class={`card${ci === 2 && i === 0 ? ' focus' : ''}`} data-beat={ci === 2 && i === 0 ? 'focus-card' : undefined}>
+              <small>{k}</small><span>{t}</span><span class={`tag t-${tag.toLowerCase()}`}>{tag}</span>
+            </div>
+          ))}
+        </div>
+      ))}
+    </div>
+    <!-- Beat 1: the ticket's acceptance tests pop out of the board. -->
+    <div class="pop" data-beat="tests" aria-hidden="true">
+      <p class="pt"><small>WEB-9</small> Acceptance criteria</p>
+      <p class="tc"><i class="ok">✓</i>Banner names every cookie group</p>
+      <p class="tc"><i class="ok">✓</i>Reject is as easy as Accept</p>
+      <p class="tc"><i class="ok">✓</i>Choice is kept for 6 months</p>
+      <p class="gate">CI passed · ready for Done</p>
+    </div>
+    <!-- Beat 2: an Insights panel slides in and its bars fill. -->
+    <div class="panel" data-beat="panel" aria-hidden="true">
+      <p class="pt">Ask your board</p>
+      <p class="q">What's slowing the release?</p>
+      <p class="a">Two tickets wait on tests. Testing holds work longest this sprint.</p>
+      <div class="bars">{['To do', 'In progress', 'Testing', 'Review'].map((n, i) => <div class="b"><span>{n}</span><i data-beat="bar" style={`--w:${[30, 55, 85, 40][i]}%`}></i></div>)}</div>
+    </div>
+    <!-- Beat 3: the client sign-off modal expands and the status badge flips. -->
+    <div class="modal" data-beat="modal" aria-hidden="true">
+      <p class="pt">Release 1.4 · Client review</p>
+      <p class="who"><span class="av">NB</span>Northwind Bank reviewed 12 tickets</p>
+      <p class="badge" data-beat="badge"><span class="was">Waiting on client</span><span class="now">Approved by client</span></p>
+    </div>
+  </div>
+</div>
+<style>
+.app{--ink:#1f1f22;width:100%;border-radius:18px;background:#fff;color:var(--ink);box-shadow:0 40px 80px -30px rgb(0 0 0/.55),0 0 0 1px rgb(0 0 0/.08);overflow:hidden;position:relative;font-size:14px;line-height:1.35;text-align:left}
+.bar{display:flex;align-items:center;gap:12px;height:40px;padding:0 14px;background:#2a2a2a;color:#c0c0c0;font-size:12px}
+.dots{display:flex;gap:6px}.dots i{width:10px;height:10px;border-radius:50%;background:#555}.dots i:first-child{background:#e10600}
+.url{margin:auto;padding:3px 14px;border-radius:6px;background:rgb(255 255 255/.08)}
+.body{display:grid;grid-template-columns:170px 1fr;min-height:400px;position:relative}
+.side{display:flex;flex-direction:column;gap:2px;padding:14px 10px;background:#f3f3f4;font-size:13px;color:#3f4150}
+.side b{margin:10px 6px 4px;font-size:11px;text-transform:uppercase;letter-spacing:.06em;color:#5f6170}.side b:first-child{margin-top:0}
+.side span{padding:6px;border-radius:6px}.side .on{background:#fff;color:var(--ink);font-weight:600;box-shadow:inset 3px 0 0 #e10600}
+.cols{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:12px;padding:14px;transform-origin:85% 30%}
+.col{display:flex;flex-direction:column;gap:8px;padding:10px;border-radius:12px;background:#ececee}
+.ch{display:flex;justify-content:space-between;margin:0;font-weight:700;font-size:13px}.ch em{font-style:normal;color:#5f6170}
+.card{display:flex;flex-direction:column;gap:4px;padding:10px;border-radius:10px;background:#fff;box-shadow:0 1px 2px rgb(0 0 0/.08)}
+.card small{font:500 11px "IBM Plex Mono",ui-monospace,monospace;color:#5f6170}.card span{font-weight:600}
+.card.focus{outline:2px solid transparent}
+.tag{align-self:flex-start;padding:2px 8px;border-radius:6px;font-size:11px;font-weight:600!important}
+.t-build{background:#ececee;color:#3f4150}.t-content{background:#fff4e5;color:#8a4b00}.t-design{background:#e8efff;color:#1d3fa8}.t-bug{background:#fde8e7;color:#a8071a}
+.pop,.panel,.modal{position:absolute;background:#fff;border-radius:14px;box-shadow:0 24px 48px -16px rgb(0 0 0/.45),0 0 0 1px rgb(0 0 0/.06);padding:14px 16px}
+.pt{margin:0 0 8px;font-weight:700}.pt small{font:500 11px "IBM Plex Mono",monospace;color:#5f6170;margin-right:6px}
+/* Without the script these layers are hidden, so the board reads as a plain mockup. */
+.pop{right:4%;top:14%;width:290px}.tc{display:flex;gap:8px;margin:6px 0;font-size:13px}.ok{font-style:normal;color:#14632f;font-weight:800}
+.gate{margin:10px 0 0;padding:6px 10px;border-radius:8px;background:#e7f6ec;color:#14632f;font-weight:700;font-size:12px}
+.panel{top:0;right:0;bottom:0;width:320px;border-radius:0}.q{margin:0;padding:8px 10px;border-radius:10px;background:#2a2a2a;color:#fff}.a{margin:10px 0;color:#3f4150}
+.bars{display:flex;flex-direction:column;gap:8px}.b{display:grid;grid-template-columns:90px 1fr;align-items:center;gap:8px;font-size:12px}.b i{display:block;height:10px;border-radius:5px;background:linear-gradient(90deg,#2a2a2a var(--w),#ececee var(--w))}
+.modal{left:50%;top:50%;width:340px;transform:translate(-50%,-50%)}.who{display:flex;align-items:center;gap:8px;margin:0 0 12px}.av{width:28px;height:28px;border-radius:7px;background:#2a2a2a;color:#fff;font-size:11px;font-weight:700;display:grid;place-items:center}
+.badge{position:relative;display:inline-grid;margin:0;font-weight:700;font-size:13px}.badge span{grid-area:1/1;padding:4px 12px;border-radius:999px}
+.was{background:#fff4e5;color:#8a4b00}.now{background:#e7f6ec;color:#14632f;opacity:0}
+.pop,.panel,.modal{opacity:0;visibility:hidden}
+@media (max-width:760px){.body{grid-template-columns:1fr}.side{display:none}.cols{grid-template-columns:repeat(3,minmax(140px,1fr));overflow:hidden}.pop{width:72%}.panel{width:78%}.modal{width:84%}}
+</style>
