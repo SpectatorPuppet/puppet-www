@@ -1,0 +1,89 @@
+---
+// The Puppet portal mockup shared by the hero and the walkthrough: the account that every app
+// plugs into. Pure markup and CSS, no images. Apps appear only as installed products here; each
+// app gets its own page. data-beat hooks are what src/scripts/story.ts animates.
+interface Props { id?: string }
+const { id } = Astro.props;
+const apps = [
+  { mark: 'T', name: 'Tasks', plan: 'Team plan · 8 seats', color: '#2a2a2a' },
+  { mark: 'B', name: 'Booking', plan: 'Starter · 3 calendars', color: '#e10600' },
+  { mark: '+', name: 'Add an app', plan: 'Browse the catalog', color: '#c0c0c0' },
+];
+const people = [['MC', 'Maria Chen', 'Owner'], ['AK', 'Arjun Kumar', 'Admin'], ['VB', 'Vivek B.', 'Member']];
+---
+<div class="app" id={id} role="img" aria-label="Puppet account portal showing installed apps, members and billing">
+  <div class="bar"><span class="dots" aria-hidden="true"><i></i><i></i><i></i></span><span class="url">puppet · Northwind Bank</span></div>
+  <div class="body">
+    <aside class="side" aria-hidden="true"><b>Northwind Bank</b><span class="on">Overview</span><span>Apps</span><span>Members</span><span>Billing</span><span>AI and usage</span><span>API keys</span><span>Settings</span></aside>
+    <div class="main" data-beat="main">
+      <p class="h">Good morning, Maria</p>
+      <div class="apps">
+        {apps.map((a, i) => (
+          <div class={`tile${i === 0 ? ' focus' : ''}`} data-beat={i === 0 ? 'focus-tile' : undefined}>
+            <span class="mk" style={`background:${a.color}`}>{a.mark}</span><span class="nm">{a.name}</span><small>{a.plan}</small>
+          </div>
+        ))}
+      </div>
+      <div class="row2">
+        <div class="box"><p class="bh">Members<em>12</em></p>{people.map(([m, n, r]) => <p class="pp"><span class="av">{m}</span>{n}<small>{r}</small></p>)}</div>
+        <div class="box"><p class="bh">Next invoice<em>1 Dec</em></p><p class="amt">[AMOUNT]</p><p class="pp">Card ending 4242</p><p class="ok-pill">Paid on time</p></div>
+      </div>
+    </div>
+    <!-- Beat 1: one sign-in opens every app. -->
+    <div class="pop" data-beat="tests" aria-hidden="true">
+      <p class="pt">Open Tasks</p>
+      <p class="tc"><i class="ok">✓</i>Signed in with your Puppet account</p>
+      <p class="tc"><i class="ok">✓</i>Role: Admin on this app</p>
+      <p class="tc"><i class="ok">✓</i>Same team, same billing</p>
+      <p class="gate">No second password</p>
+    </div>
+    <!-- Beat 2: usage panel slides in and its bars fill. -->
+    <div class="panel" data-beat="panel" aria-hidden="true">
+      <p class="pt">AI and usage this month</p>
+      <p class="q">Built-in AI · shared by every app</p>
+      <p class="a">Set a monthly budget, or switch to your own key or a free local model.</p>
+      <div class="bars">{['Tasks', 'Booking', 'Seats', 'Budget'].map((n, i) => <div class="b"><span>{n}</span><i data-beat="bar" style={`--w:${[62, 28, 75, 45][i]}%`}></i></div>)}</div>
+    </div>
+    <!-- Beat 3: invite modal expands and the status badge flips. -->
+    <div class="modal" data-beat="modal" aria-hidden="true">
+      <p class="pt">Invite to Northwind Bank</p>
+      <p class="who"><span class="av">JL</span>jo@studio.example · Guest on Tasks</p>
+      <p class="badge" data-beat="badge"><span class="was">Invite sent</span><span class="now">Joined · access set</span></p>
+    </div>
+  </div>
+</div>
+<style>
+.app{--ink:#1f1f22;width:100%;border-radius:18px;background:#fff;color:var(--ink);box-shadow:0 40px 80px -30px rgb(0 0 0/.55),0 0 0 1px rgb(0 0 0/.08);overflow:hidden;position:relative;font-size:14px;line-height:1.35;text-align:left}
+.bar{display:flex;align-items:center;gap:12px;height:40px;padding:0 14px;background:#2a2a2a;color:#c0c0c0;font-size:12px}
+.dots{display:flex;gap:6px}.dots i{width:10px;height:10px;border-radius:50%;background:#555}.dots i:first-child{background:#e10600}
+.url{margin:auto;padding:3px 14px;border-radius:6px;background:rgb(255 255 255/.08)}
+.body{display:grid;grid-template-columns:170px 1fr;min-height:400px;position:relative}
+.side{display:flex;flex-direction:column;gap:2px;padding:14px 10px;background:#2a2a2a;font-size:13px;color:#c0c0c0}
+.side b{margin:0 6px 8px;font-size:12px;color:#fff}
+.side span{padding:6px;border-radius:6px}.side .on{background:rgb(255 255 255/.1);color:#fff;font-weight:600;box-shadow:inset 3px 0 0 #e10600}
+.main{display:flex;flex-direction:column;gap:12px;padding:16px;background:#f3f3f4;transform-origin:20% 25%}
+.h{margin:0;font:800 18px Archivo,sans-serif}
+.apps{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:10px}
+.tile{display:flex;flex-direction:column;gap:2px;padding:12px;border-radius:12px;background:#fff;box-shadow:0 1px 2px rgb(0 0 0/.08);outline:2px solid transparent}
+.mk{width:30px;height:30px;margin-bottom:6px;border-radius:8px;color:#fff;font-weight:800;display:grid;place-items:center}
+.nm{font-weight:700}.tile small{color:#5f6170;font-size:12px}
+.row2{display:grid;grid-template-columns:3fr 2fr;gap:10px}
+.box{padding:12px;border-radius:12px;background:#fff;box-shadow:0 1px 2px rgb(0 0 0/.08)}
+.bh{display:flex;justify-content:space-between;margin:0 0 8px;font-weight:700}.bh em{font-style:normal;color:#5f6170;font-weight:500}
+.pp{display:flex;align-items:center;gap:8px;margin:6px 0;font-size:13px}.pp small{margin-left:auto;color:#5f6170}
+.amt{margin:0;font:600 18px "IBM Plex Mono",ui-monospace,monospace}
+.ok-pill{display:inline-block;margin:4px 0 0;padding:2px 10px;border-radius:999px;background:#e7f6ec;color:#14632f;font-size:12px;font-weight:700}
+.av{width:26px;height:26px;flex:none;border-radius:50%;background:#2a2a2a;color:#fff;font-size:10px;font-weight:700;display:grid;place-items:center}
+.pop,.panel,.modal{position:absolute;background:#fff;border-radius:14px;box-shadow:0 24px 48px -16px rgb(0 0 0/.45),0 0 0 1px rgb(0 0 0/.06);padding:14px 16px}
+.pt{margin:0 0 8px;font-weight:700}
+.pop{right:4%;top:14%;width:290px}.tc{display:flex;gap:8px;margin:6px 0;font-size:13px}.ok{font-style:normal;color:#14632f;font-weight:800}
+.gate{margin:10px 0 0;padding:6px 10px;border-radius:8px;background:#e7f6ec;color:#14632f;font-weight:700;font-size:12px}
+.panel{top:0;right:0;bottom:0;width:320px;border-radius:0}.q{margin:0;padding:8px 10px;border-radius:10px;background:#2a2a2a;color:#fff}.a{margin:10px 0;color:#3f4150}
+.bars{display:flex;flex-direction:column;gap:8px}.b{display:grid;grid-template-columns:70px 1fr;align-items:center;gap:8px;font-size:12px}.b i{display:block;height:10px;border-radius:5px;background:linear-gradient(90deg,#2a2a2a var(--w),#ececee var(--w))}
+.modal{left:50%;top:50%;width:340px;transform:translate(-50%,-50%)}.who{display:flex;align-items:center;gap:8px;margin:0 0 12px}
+.badge{position:relative;display:inline-grid;margin:0;font-weight:700;font-size:13px}.badge span{grid-area:1/1;padding:4px 12px;border-radius:999px}
+.was{background:#fff4e5;color:#8a4b00}.now{background:#e7f6ec;color:#14632f;opacity:0}
+/* Without the script these layers stay hidden, so the portal reads as a plain mockup. */
+.pop,.panel,.modal{opacity:0;visibility:hidden}
+@media (max-width:760px){.body{grid-template-columns:1fr}.side{display:none}.row2{grid-template-columns:1fr}.pop{width:72%}.panel{width:78%}.modal{width:84%}}
+</style>

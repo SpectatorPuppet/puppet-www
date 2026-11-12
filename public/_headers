@@ -1,5 +1,5 @@
-# Cloudflare Pages response headers (TSK-060). The site runs no JavaScript of its own; the only
-# script is the optional Cloudflare Web Analytics beacon.
+# Cloudflare Pages response headers (TSK-060). The only JavaScript is the home page scroll story
+# (self-hosted under /_astro/) and the optional Cloudflare Web Analytics beacon.
 /*
   Strict-Transport-Security: max-age=31536000; includeSubDomains
   X-Content-Type-Options: nosniff

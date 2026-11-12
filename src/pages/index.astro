@@ -3,28 +3,23 @@ import Base from '../layouts/Base.astro';
 import Plans from '../components/Plans.astro';
 import Faqs from '../components/Faqs.astro';
 import Cta from '../components/Cta.astro';
-import { faqs, links, trialDays, comparisons, launchOffer, fromPrice } from '../data/site';
+import Story from '../components/story/Story.astro';
+import Bento from '../components/story/Bento.astro';
+import Statement from '../components/story/Statement.astro';
+import { faqs, trialDays, comparisons, fromPrice } from '../data/site';
 const top = faqs.slice(0, 5);
 const ld = [{ '@type': 'FAQPage', mainEntity: top.map((f) => ({ '@type': 'Question', name: f.q, acceptedAnswer: { '@type': 'Answer', text: f.a } })) }];
 ---
-<Base title="Puppet: Client Work and Booking Software, AI Included" description="Run your client work and your bookings in one place, with AI that doesn't cost extra per seat. Tasks from $5, Booking from $6. 14-day trial." ld={ld}>
-<section class="hero" style="padding:0"><div class="w"><div>
-<h1>Run your client work and your bookings in one place</h1>
-<p>Boards your team actually finishes and a booking page that answers customers for you, with AI that doesn't cost extra per seat.</p>
-<div class="row"><a class="btn" href={links.signup}>Start {trialDays}-day trial</a><a class="btn gh" href={links.demo}>Book a demo</a></div>
-<div class="trust"><b>Launch offer:</b> {launchOffer} <a href={links.tasksDemo}>Try the live demo</a></div></div>
-<svg viewBox="0 0 400 300" role="img" aria-label="Flat layered hills with a red sun and a tent"><circle cx="300" cy="80" r="44" fill="#E10600"/><path d="M0 200 Q100 120 200 190 T400 170 V300 H0Z" fill="#C0C0C0" opacity=".45"/><path d="M0 235 Q120 170 240 228 T400 212 V300 H0Z" fill="#C0C0C0" opacity=".8"/><path d="M160 236 l40 -58 l40 58Z" fill="#E10600"/><path d="M196 236 l4 -20 l4 20Z" fill="#2A2A2A"/><path d="M60 70 q8 -8 16 0 q8 -8 16 0M110 48 q6 -6 12 0 q6 -6 12 0" stroke="#C0C0C0" fill="none" stroke-width="3"/></svg></div></section>
+<Base title="Puppet: One Account for Every Business App, AI Included" description="One sign-in, one bill and one team for every Puppet app, with AI you control and each customer's data kept apart. Start a 14-day trial." ld={ld}>
+<Story />
 
 <section id="products"><div class="w"><h2>One account. Every tool your business needs.</h2><p class="lead">Start with one product and add more as you grow. Same sign-in, same billing, same team.</p>
 <div class="g"><article class="c"><div class="ic"><svg viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2" aria-hidden="true"><path d="M4 6h16M4 12h10M4 18h7"/><path d="m15 17 2 2 4-4"/></svg></div><h3>Puppet Tasks</h3><p>Boards, lists and calendar, with GitHub, CI, Slack and Figma built in. Voice notes become tickets, and AI runs on your own key or a free local model.</p><a class="more" href="/tasks">Explore Tasks →</a></article>
 <article class="c"><div class="ic"><svg viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2" aria-hidden="true"><rect x="3" y="5" width="18" height="16" rx="2"/><path d="M3 10h18M8 3v4M16 3v4"/></svg></div><h3>Puppet Booking</h3><p>Online appointment scheduling with staff schedules, deposits, reminders and AI answers, on a booking page on your own domain.</p><a class="more" href="/booking">Explore Booking →</a></article>
 <article class="c"><div class="ic"><svg viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2" aria-hidden="true"><circle cx="12" cy="12" r="9"/><path d="M12 8v8M8 12h8"/></svg></div><h3>More coming</h3><p>CRM, invoicing and forms are on the roadmap. Every new product joins your existing account.</p><a class="more" href="/roadmap">See roadmap →</a></article></div></div></section>
 
-<section style="background:#fff"><div class="w split"><div class="mock" role="img" aria-label="Tasks board preview"><div></div><div class="m2"><span></span><span></span><span></span><span></span><span></span></div></div><div><h2>Project management where Done means tested</h2><p class="lead">Link each acceptance criterion to a test. When your CI run passes, the ticket can close. Not before.</p><ul><li>GitHub pull requests move tickets for you</li><li>Voice notes become tickets with acceptance criteria</li><li>Ask your board: "what is blocking the release?"</li><li>Claude reads and updates tickets over MCP</li></ul><a class="btn" href="/tasks">See Tasks features</a></div></div></section>
-<section><div class="w split"><div><h2>Online booking that looks like your brand</h2><p class="lead">Customers book in a few taps, any time. You get fewer phone calls and fewer no-shows.</p><ul><li>Booking page on booking.yourbrand.com</li><li>Staff schedules, breaks and holidays</li><li>Email and SMS reminders</li><li>Deposits with Stripe</li></ul><a class="btn" href="/booking">See Booking features</a></div><div class="mock" role="img" aria-label="Booking dashboard preview"><div></div><div class="m2"><span></span><span></span><span></span><span></span><span></span></div></div></div></section>
-
-<section class="dark"><div class="w"><h2>Built for business, secure by default</h2><p class="lead">The features other tools save for their most expensive plan.</p>
-<div class="g g4"><div class="c"><h3>Your brand</h3><p>Themes, logo, colors and custom domain.</p></div><div class="c"><h3>AI you control</h3><p>Included, local, or your own key.</p></div><div class="c"><h3>Roles and guests</h3><p>Fine-grained permissions for staff and clients.</p></div><div class="c"><h3>Isolated data</h3><p>Each customer's data separated in the database.</p></div><div class="c"><h3>Every device</h3><p>Installable app for desktop, iPad and phones.</p></div><div class="c"><h3>Fast</h3><p>Static pages and lean apps.</p></div><div class="c"><h3>Accessible</h3><p>Every page checked with axe.</p></div><div class="c"><h3>Private</h3><p>Voice audio deleted after transcription.</p></div></div></div></section>
+<Bento />
+<Statement />
 
 <section><div class="w"><h2>Up and running in 3 steps</h2><div class="g steps"><div><div class="n">1</div><h3>Create your account</h3><p>Start a {trialDays}-day trial in under a minute.</p></div><div><div class="n">2</div><h3>Pick your products</h3><p>Turn on Tasks, Booking or both.</p></div><div><div class="n">3</div><h3>Invite your team</h3><p>Add staff, and clients as guests.</p></div></div></div></section>
 
