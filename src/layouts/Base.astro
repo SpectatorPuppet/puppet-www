@@ -16,7 +16,7 @@ const graph = [
   ...(crumbs.length ? [{ '@type': 'BreadcrumbList', itemListElement: [['Home', '/'], ...crumbs].map(([name, p], i) => ({ '@type': 'ListItem', position: i + 1, name, item: url(p) })) }] : []),
 ];
 const json = JSON.stringify({ '@context': 'https://schema.org', '@graph': graph }).replace(/</g, '\\u003c');
-const nav: [string, string][] = [['Products', '/products'], ['Tasks', '/tasks'], ['Booking', '/booking'], ['Pricing', '/pricing'], ['Compare', '/compare'], ['Blog', '/blog']];
+const nav: [string, string][] = [['Products', '/products'], ['Pricing', '/pricing'], ['Compare', '/compare'], ['Blog', '/blog']];
 ---
 <!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
 <title>{title}</title><meta name="description" content={description}><link rel="canonical" href={canonical}>
