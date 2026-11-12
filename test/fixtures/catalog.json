@@ -1,0 +1,20 @@
+{
+  "currency": "usd",
+  "products": [
+    {
+      "key": "notes",
+      "name": "Notes",
+      "description": "Shared notes for small teams.",
+      "url": "https://notes.example.com",
+      "landing": {
+        "url": "https://notes.example.com/",
+        "headline": "Shared notes for small teams",
+        "summary": "Write together, find anything, and keep client notes apart.",
+        "features": [{ "title": "Live editing", "text": "Everyone types in the same note." }],
+        "faqs": [{ "q": "Is there a trial?", "a": "Yes, 14 days on every plan." }],
+        "seo": { "title": "Puppet Notes: Shared Notes for Small Teams", "description": "Shared notes with live editing, search and client spaces, on your Puppet account. Start a 14-day trial.", "keywords": [] }
+      },
+      "plans": [{ "id": "plan_1", "key": "team", "name": "Team", "description": "For one team.", "trialDays": 14, "minSeats": 0, "prices": [{ "interval": "month", "currency": "usd", "unitAmount": 900 }] }]
+    }
+  ]
+}

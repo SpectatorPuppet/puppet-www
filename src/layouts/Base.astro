@@ -1,11 +1,11 @@
 ---
 import { brand, links } from '../data/site';
-interface Props { title: string; description: string; path?: string; ld?: object[]; crumbs?: [string, string][]; type?: string; noindex?: boolean }
-const { title, description, path = '/', ld = [], crumbs = [], type = 'website', noindex = false } = Astro.props;
+interface Props { title: string; description: string; path?: string; ld?: object[]; crumbs?: [string, string][]; type?: string; noindex?: boolean; /** An app's own landing page, when it serves one: search engines credit that address. */ canonicalUrl?: string; image?: string }
+const { title, description, path = '/', ld = [], crumbs = [], type = 'website', noindex = false, canonicalUrl, image } = Astro.props;
 const site = Astro.site ?? new URL('https://example.com');
 const url = (p: string) => new URL(p, site).href;
-const canonical = url(path);
-const ogImage = url('/og.png');
+const canonical = canonicalUrl ?? url(path);
+const ogImage = image ?? url('/og.png');
 // Cloudflare Web Analytics (free, cookieless): on only when the deploy sets the site token.
 const analyticsToken = process.env.CF_ANALYTICS_TOKEN;
 // One JSON-LD graph per page: the organization, the page's own nodes, and breadcrumbs.
