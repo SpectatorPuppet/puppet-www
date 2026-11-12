@@ -10,4 +10,6 @@ export default defineConfig({
   site: process.env.SITE_URL ?? 'https://example.com',
   integrations: [sitemap({ filter: (page) => !drafts.some((d) => page.includes(d)) })],
   build: { inlineStylesheets: 'always' },
+  // Scripts stay files under /_astro/ (never inline): the CSP allows script-src 'self' only.
+  vite: { build: { assetsInlineLimit: 0 } },
 });

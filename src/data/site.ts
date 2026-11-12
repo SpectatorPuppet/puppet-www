@@ -33,6 +33,16 @@ export const keyOf = (name: string) => name.toLowerCase().replace(/[^a-z0-9]+/g,
  * A plan CTA: sign-up that remembers product and plan through sign-in, then opens that plan's
  * checkout. A plan the catalog doesn't know falls back to the plan picker.
  */
+/**
+ * A product page's "Log in": the portal signs the person in, then opens the app if they have
+ * access, or shows that product's plans in their organization so they can buy it.
+ */
+export const openLink = (product: string) => `${appUrl}/open/${encodeURIComponent(keyOf(product))}`;
+/** The products with a hand-written page, for the Products listing (apps from the catalog join them). */
+export const builtInProducts = [
+  { key: 'tasks', name: 'Tasks', category: 'Project management', summary: 'Boards, lists and calendar, with GitHub, CI, Slack and Figma built in. Voice notes become tickets, and AI runs on your own key or a free local model.', href: '/tasks' },
+  { key: 'booking', name: 'Booking', category: 'Scheduling', summary: 'Online appointment scheduling with staff schedules, deposits, reminders and AI answers, on a booking page on your own domain.', href: '/booking' },
+];
 export const signupLink = (product: string, plan: string) =>
   `${links.signup}&product=${encodeURIComponent(keyOf(product))}&plan=${encodeURIComponent(keyOf(plan))}`;
 export type Plan = { name: string; blurb: string; prices: Record<string, number>; features: string[]; hot?: boolean };

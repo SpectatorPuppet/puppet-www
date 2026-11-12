@@ -1,0 +1,67 @@
+---
+// Every Puppet product in one list: search by name or what it does, as cards or a list.
+// Each one opens its own landing page; "Log in" goes through the portal, which opens the app
+// for people with access and shows the plans to everyone else.
+import Base from '../layouts/Base.astro';
+import Cta from '../components/Cta.astro';
+import { catalog } from '../lib/catalog';
+import { productListing } from '../lib/landing.mjs';
+import { brand, builtInProducts, openLink } from '../data/site';
+const products = productListing(builtInProducts, catalog);
+const ld = [{ '@type': 'ItemList', itemListElement: products.map((p, i) => ({ '@type': 'ListItem', position: i + 1, name: `${brand} ${p.name}`, url: p.href })) }];
+---
+<Base title="All Puppet Products: Apps on One Account" description="Every Puppet product in one place. Search the apps, open each one's page, and sign in once with your Puppet account to use them all." path="/products" ld={ld} crumbs={[['Products', '/products']]}>
+<Fragment slot="hero"><h1>Products</h1><p>Every app runs on your one Puppet account. Pick one to see what it does, then log in or start a trial.</p></Fragment>
+<section class="pl"><div class="w">
+<div class="bar">
+<label class="find" hidden data-find><span>Search products</span><input type="search" placeholder="Name or what it does" autocomplete="off" data-q /></label>
+<fieldset class="view"><legend>View as</legend><label><input type="radio" name="view" value="cards" checked /> Cards</label><label><input type="radio" name="view" value="list" /> List</label></fieldset>
+</div>
+<p class="count" aria-live="polite" data-count>{products.length} products</p>
+<ul class="items" data-items>
+{products.map((p) => <li class="c" data-text={`${p.name} ${p.category} ${p.summary}`.toLowerCase()}>
+<div class="tx"><h2><a href={p.href}>{brand} {p.name}</a></h2>{p.category && <p class="cat">{p.category}</p>}<p>{p.summary}</p></div>
+<div class="acts"><a class="btn" href={p.href} aria-label={`About ${brand} ${p.name}`}>Learn more</a><a class="btn gh" href={openLink(p.key)} aria-label={`Log in to ${brand} ${p.name}`}>Log in</a></div>
+</li>)}
+</ul>
+<p class="none" hidden data-none>No products match. Try another word, or <a href="/roadmap">see what's coming</a>.</p>
+</div></section>
+<Cta />
+</Base>
+<style>
+.bar{display:flex;flex-wrap:wrap;gap:16px;align-items:end;justify-content:space-between;margin-bottom:12px}
+.find{display:grid;gap:6px;flex:1 1 280px;max-width:480px;font-weight:600}.find input{font:inherit;padding:12px 14px;border:1px solid #767676;border-radius:8px;min-height:46px;background:#fff}
+.view{border:0;padding:0;margin:0;display:flex;gap:16px;align-items:center}.view legend{float:left;margin-right:8px;font-weight:600}.view label{display:inline-flex;gap:6px;align-items:center;min-height:44px}
+.count{color:var(--mu);font-size:15px;margin:0 0 16px}
+.items{list-style:none;padding:0;margin:0;display:grid;grid-template-columns:repeat(auto-fill,minmax(300px,1fr));gap:20px}
+.items li{display:flex;flex-direction:column;justify-content:space-between;gap:16px}
+.items h2{font-size:22px;margin:0 0 4px}.items h2 a{text-decoration:none}.cat{color:var(--mu);font-size:14px;margin:0 0 8px}
+.acts{display:flex;flex-wrap:wrap;gap:10px}.acts .gh{color:var(--ch);border-color:var(--ch)}
+.pl:has(input[value="list"]:checked) .items{grid-template-columns:1fr;gap:12px}
+.pl:has(input[value="list"]:checked) .items li{flex-direction:row;align-items:center}
+.items li[hidden]{display:none}
+@media (max-width:560px){.pl:has(input[value="list"]:checked) .items li{flex-direction:column;align-items:stretch}.acts .btn{flex:1}}
+</style>
+<script>
+  // Search works once this loads; without it every product stays listed and the box stays hidden.
+  const find = document.querySelector<HTMLElement>('[data-find]');
+  const q = document.querySelector<HTMLInputElement>('[data-q]');
+  const items = [...document.querySelectorAll<HTMLElement>('[data-items] > li')];
+  const count = document.querySelector<HTMLElement>('[data-count]');
+  const none = document.querySelector<HTMLElement>('[data-none]');
+  if (find && q && count && none) {
+    find.hidden = false;
+    const filter = () => {
+      const words = q.value.toLowerCase().split(/\s+/).filter(Boolean);
+      let shown = 0;
+      for (const li of items) {
+        const hit = words.every((w) => (li.dataset.text ?? '').includes(w));
+        li.hidden = !hit;
+        if (hit) shown++;
+      }
+      count.textContent = `${shown} ${shown === 1 ? 'product' : 'products'}`;
+      none.hidden = shown > 0;
+    };
+    q.addEventListener('input', filter);
+  }
+</script>

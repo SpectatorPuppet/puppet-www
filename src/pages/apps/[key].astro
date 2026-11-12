@@ -1,0 +1,30 @@
+---
+// A landing page for every app whose release carries `landing` content and has no hand-written
+// page: the app manages its own copy and SEO, the platform's catalog supplies plans and prices.
+import Base from '../../layouts/Base.astro';
+import Features from '../../components/Features.astro';
+import Faqs from '../../components/Faqs.astro';
+import Cta from '../../components/Cta.astro';
+import { catalog, handWritten, type CatalogProduct } from '../../lib/catalog';
+import { generatedApps } from '../../lib/landing.mjs';
+import { brand, links, openLink, trialDays } from '../../data/site';
+
+export function getStaticPaths() {
+  return generatedApps(catalog, handWritten).map((product: CatalogProduct) => ({ params: { key: product.key }, props: { product } }));
+}
+const { product } = Astro.props as { product: CatalogProduct };
+const l = product.landing!;
+const path = `/apps/${product.key}`;
+const full = `${brand} ${product.name}`;
+const money = (minor: number) => new Intl.NumberFormat('en-US', { style: 'currency', currency: 'USD', maximumFractionDigits: minor % 100 ? 2 : 0 }).format(minor / 100);
+const plans = product.plans.map((plan) => ({ ...plan, monthly: plan.prices.find((x) => x.interval === 'month') })).filter((plan) => plan.monthly);
+const ld: object[] = [{ '@type': 'SoftwareApplication', name: full, description: l.seo.description, applicationCategory: l.category ?? 'BusinessApplication', operatingSystem: 'Web', offers: plans.map((plan) => ({ '@type': 'Offer', name: plan.name, price: String(plan.monthly!.unitAmount / 100), priceCurrency: 'USD' })) }];
+if (l.faqs.length) ld.push({ '@type': 'FAQPage', mainEntity: l.faqs.map((f) => ({ '@type': 'Question', name: f.q, acceptedAnswer: { '@type': 'Answer', text: f.a } })) });
+---
+<Base title={l.seo.title} description={l.seo.description} path={path} ld={ld} crumbs={[[full, path]]} canonicalUrl={l.url} image={l.seo.image}>
+<Fragment slot="hero"><h1>{l.headline}</h1><p>{l.summary}</p><div class="row"><a class="btn" href={links.signup}>Start {trialDays}-day trial</a><a class="btn gh" href={openLink(product.key)}>Log in</a>{l.url && <a class="btn gh" href={l.url}>Visit {product.name}</a>}</div></Fragment>
+{l.features.length > 0 && <section><div class="w"><h2>What you get with {full}</h2><Features items={l.features} /></div></section>}
+{plans.length > 0 && <section class="pr" style="background:#fff"><div class="w"><h2>{full} pricing</h2><div class="g">{plans.map((plan) => <article class="c"><h3>{plan.name}</h3>{plan.description && <p>{plan.description}</p>}<p><strong>{money(plan.monthly!.unitAmount)}</strong> a month{plan.minSeats > 0 ? ' per seat' : ''}</p></article>)}</div><p><a href="/pricing">All prices →</a></p></div></section>}
+{l.faqs.length > 0 && <section id="faq"><div class="w" style="max-width:820px"><h2>{full} questions</h2><Faqs items={l.faqs} /></div></section>}
+<Cta />
+</Base>
