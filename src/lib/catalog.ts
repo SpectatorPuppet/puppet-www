@@ -1,3 +1,4 @@
+import { builtInProducts } from '../data/site';
 import { loadCatalog } from './landing.mjs';
 
 export type Landing = {
@@ -22,4 +23,4 @@ export type CatalogProduct = {
 export const catalog: CatalogProduct[] = await loadCatalog();
 export const landingFor = (key: string) => catalog.find((p) => p.key === key)?.landing ?? null;
 /** Products with their own hand-written page; the rest get /apps/<key>. */
-export const handWritten = ['tasks', 'booking'];
+export const handWritten = builtInProducts.map((p) => p.key);

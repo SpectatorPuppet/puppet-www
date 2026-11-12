@@ -1,6 +1,6 @@
 import { test } from 'node:test';
 import assert from 'node:assert/strict';
-import { generatedApps, loadCatalog, mergeLanding } from '../src/lib/landing.mjs';
+import { generatedApps, loadCatalog, mergeLanding, productListing } from '../src/lib/landing.mjs';
 
 const base = { title: 'T', description: 'D', h1: 'H', intro: 'I', category: 'C', features: [{ title: 'a', text: 'b' }] };
 const landing = {
@@ -35,4 +35,18 @@ test('loads the catalog from the API, a file, or falls back to nothing', async (
 test('apps without a hand-written page get a generated one', () => {
   const list = [{ key: 'tasks', landing }, { key: 'notes', landing }, { key: 'bare', landing: null }];
   assert.deepEqual(generatedApps(list, ['tasks']).map((p) => p.key), ['notes']);
+});
+
+test('the Products listing keeps hand-written products first, then catalog apps with landing content', () => {
+  const builtIn = [{ key: 'tasks', name: 'Tasks', category: 'Project management', summary: 'Built-in copy.', href: '/tasks' }];
+  const products = [
+    { key: 'tasks', name: 'Tasks', landing: { summary: 'From the release.', category: '' } },
+    { key: 'notes', name: 'Notes', landing: { summary: 'Shared notes.', category: 'Notes' } },
+    { key: 'bare', name: 'Bare', landing: null },
+  ];
+  assert.deepEqual(productListing(builtIn, products), [
+    { key: 'tasks', name: 'Tasks', category: 'Project management', summary: 'From the release.', href: '/tasks' },
+    { key: 'notes', name: 'Notes', category: 'Notes', summary: 'Shared notes.', href: '/apps/notes' },
+  ]);
+  assert.deepEqual(productListing(builtIn, []), builtIn);
 });

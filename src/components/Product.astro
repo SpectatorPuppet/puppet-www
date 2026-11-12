@@ -6,7 +6,7 @@ import Plans from './Plans.astro';
 import Faqs from './Faqs.astro';
 import { landingFor } from '../lib/catalog';
 import { mergeLanding } from '../lib/landing.mjs';
-import { brand, comparisons, currencies, pricing, links, trialDays, keyOf, type Feature } from '../data/site';
+import { brand, comparisons, currencies, pricing, links, openLink, trialDays, keyOf, type Feature } from '../data/site';
 interface Props { name: 'Tasks' | 'Booking'; path: string; title: string; description: string; h1: string; intro: string; category: string; features: Feature[]; extra?: { heading: string; lead: string; items: Feature[] } }
 // The app's own release can replace this copy (manifest `landing`, via the platform catalog).
 const p = { ...Astro.props, ...mergeLanding(Astro.props, landingFor(keyOf(Astro.props.name))) };
@@ -15,7 +15,7 @@ const ld: object[] = [{ '@type': 'SoftwareApplication', name: full, description:
 if (p.faqs.length) ld.push({ '@type': 'FAQPage', mainEntity: p.faqs.map((f) => ({ '@type': 'Question', name: f.q, acceptedAnswer: { '@type': 'Answer', text: f.a } })) });
 ---
 <Base title={p.title} description={p.description} path={p.path} ld={ld} crumbs={[[full, p.path]]} canonicalUrl={p.canonical} image={p.image}>
-<Fragment slot="hero"><h1>{p.h1}</h1><p>{p.intro}</p><div class="row"><a class="btn" href={links.signup}>Start {trialDays}-day trial</a><a class="btn gh" href={links.demo}>Book a demo</a>{p.name === 'Tasks' && <a class="btn gh" href={links.tasksDemo}>Try the live demo</a>}</div></Fragment>
+<Fragment slot="hero"><h1>{p.h1}</h1><p>{p.intro}</p><div class="row"><a class="btn" href={links.signup}>Start {trialDays}-day trial</a><a class="btn gh" href={openLink(p.name)}>Log in</a><a class="btn gh" href={links.demo}>Book a demo</a>{p.name === 'Tasks' && <a class="btn gh" href={links.tasksDemo}>Try the live demo</a>}</div></Fragment>
 <section><div class="w"><h2>What you get with {full}</h2><Features items={p.features} /></div></section>
 {p.extra && <section style="background:#fff"><div class="w"><h2>{p.extra.heading}</h2><p class="lead">{p.extra.lead}</p><Features items={p.extra.items} /></div></section>}
 <section><div class="w"><h2>{full} compared</h2><div class="g">{comparisons.filter((c) => c.product === p.name).map((c) => <article class="c"><h3>{full} vs {c.name}</h3><p>{c.summary}</p><a class="more" href={`/compare/${c.slug}`}>Read the comparison →</a></article>)}</div></div></section>

@@ -42,3 +42,25 @@ export function mergeLanding(base, landing) {
 /** Apps with landing content that have no hand-written page yet; each gets /apps/<key>. */
 export const generatedApps = (products, handWritten) =>
   products.filter((p) => p.landing && !handWritten.includes(p.key));
+
+/**
+ * Every product for the Products listing: the hand-written ones (their copy can be replaced by
+ * the app's landing content) and then each catalog app with landing content, in catalog order.
+ */
+export function productListing(builtIn, products) {
+  const handWritten = builtIn.map((b) => b.key);
+  const landingOf = (key) => products.find((p) => p.key === key)?.landing;
+  return [
+    ...builtIn.map((b) => {
+      const l = landingOf(b.key);
+      return { ...b, summary: l?.summary || b.summary, category: l?.category || b.category };
+    }),
+    ...generatedApps(products, handWritten).map((p) => ({
+      key: p.key,
+      name: p.name,
+      category: p.landing.category ?? '',
+      summary: p.landing.summary,
+      href: `/apps/${p.key}`,
+    })),
+  ];
+}

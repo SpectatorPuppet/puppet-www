@@ -7,7 +7,7 @@ import Faqs from '../../components/Faqs.astro';
 import Cta from '../../components/Cta.astro';
 import { catalog, handWritten, type CatalogProduct } from '../../lib/catalog';
 import { generatedApps } from '../../lib/landing.mjs';
-import { brand, links, trialDays } from '../../data/site';
+import { brand, links, openLink, trialDays } from '../../data/site';
 
 export function getStaticPaths() {
   return generatedApps(catalog, handWritten).map((product: CatalogProduct) => ({ params: { key: product.key }, props: { product } }));
@@ -22,7 +22,7 @@ const ld: object[] = [{ '@type': 'SoftwareApplication', name: full, description:
 if (l.faqs.length) ld.push({ '@type': 'FAQPage', mainEntity: l.faqs.map((f) => ({ '@type': 'Question', name: f.q, acceptedAnswer: { '@type': 'Answer', text: f.a } })) });
 ---
 <Base title={l.seo.title} description={l.seo.description} path={path} ld={ld} crumbs={[[full, path]]} canonicalUrl={l.url} image={l.seo.image}>
-<Fragment slot="hero"><h1>{l.headline}</h1><p>{l.summary}</p><div class="row"><a class="btn" href={links.signup}>Start {trialDays}-day trial</a>{l.url && <a class="btn gh" href={l.url}>Visit {product.name}</a>}</div></Fragment>
+<Fragment slot="hero"><h1>{l.headline}</h1><p>{l.summary}</p><div class="row"><a class="btn" href={links.signup}>Start {trialDays}-day trial</a><a class="btn gh" href={openLink(product.key)}>Log in</a>{l.url && <a class="btn gh" href={l.url}>Visit {product.name}</a>}</div></Fragment>
 {l.features.length > 0 && <section><div class="w"><h2>What you get with {full}</h2><Features items={l.features} /></div></section>}
 {plans.length > 0 && <section class="pr" style="background:#fff"><div class="w"><h2>{full} pricing</h2><div class="g">{plans.map((plan) => <article class="c"><h3>{plan.name}</h3>{plan.description && <p>{plan.description}</p>}<p><strong>{money(plan.monthly!.unitAmount)}</strong> a month{plan.minSeats > 0 ? ' per seat' : ''}</p></article>)}</div><p><a href="/pricing">All prices →</a></p></div></section>}
 {l.faqs.length > 0 && <section id="faq"><div class="w" style="max-width:820px"><h2>{full} questions</h2><Faqs items={l.faqs} /></div></section>}
