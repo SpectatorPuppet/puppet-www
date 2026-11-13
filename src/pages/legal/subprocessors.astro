@@ -1,0 +1,20 @@
+---
+import Legal from '../../components/Legal.astro';
+import { brand, contactEmail } from '../../data/site';
+const subprocessors = [
+  { name: '[Hosting provider]', does: 'Servers, databases and backups that run the service.', data: 'All data your organization stores.', where: '[Region]' },
+  { name: 'Stripe', does: 'Card payments, invoices and tax.', data: 'Billing contact, billing address, payment details.', where: 'United States, European Union' },
+  { name: '[Email provider]', does: 'Sending invitations, notices and receipts.', data: 'Names, email addresses and the content of those emails.', where: '[Region]' },
+];
+---
+<Legal title="Subprocessors" slug="subprocessors" updated="2026-11-13" description={`The companies ${brand} uses to run the service, what each one does, and which data it handles.`}>
+<p>These companies handle personal data for {brand} under the <a href="/legal/dpa">data processing agreement</a>. Each is bound by a contract to protect it at least as well as {brand} does.</p>
+<div style="overflow-x:auto"><table>
+<caption style="position:absolute;width:1px;height:1px;overflow:hidden;clip-path:inset(50%);white-space:nowrap">Subprocessors</caption>
+<thead><tr><th scope="col">Company</th><th scope="col">What it does</th><th scope="col">Data it handles</th><th scope="col">Where</th></tr></thead>
+<tbody>{subprocessors.map((s) => <tr><th scope="row">{s.name}</th><td>{s.does}</td><td>{s.data}</td><td>{s.where}</td></tr>)}</tbody>
+</table></div>
+<h2>AI features</h2><p>AI features run on a model hosted by {brand} unless your organization sets its own AI provider in the portal. When you set your own provider, your content is sent to that provider under your agreement with it, and it is not a subprocessor of {brand}.</p>
+<h2>Apps you install</h2><p>Third-party apps in the catalog are chosen by you. They receive only the access you approve and are not subprocessors of {brand}. Each app's page names its developer and links its privacy policy.</p>
+<h2>Changes</h2><p>This page is updated at least 30 days before a new subprocessor starts handling data. To be told by email, or to object to a change, write to <a href={`mailto:${contactEmail}`}>{contactEmail}</a>.</p>
+</Legal>
