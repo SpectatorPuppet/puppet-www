@@ -39,7 +39,7 @@ export function mergeLanding(base, landing) {
   };
 }
 
-/** Apps with landing content that have no hand-written page yet; each gets /apps/<key>. */
+/** Apps with landing content that have no hand-written page yet; each gets /products/<key>. */
 export const generatedApps = (products, handWritten) =>
   products.filter((p) => p.landing && !handWritten.includes(p.key));
 
@@ -60,7 +60,63 @@ export function productListing(builtIn, products) {
       name: p.name,
       category: p.landing.category ?? '',
       summary: p.landing.summary,
-      href: `/apps/${p.key}`,
+      href: `/products/${p.key}`,
     })),
   ];
+}
+
+const CURRENCIES = ['usd', 'eur', 'inr'];
+
+/**
+ * The catalog in every currency the website shows ({ USD: products, EUR: ..., INR: ... }), so
+ * prices staff set under Staff → Plans reach the pricing pages. CATALOG_FILE gives only its own
+ * currency. Missing or failing answers leave that currency out.
+ */
+export async function loadCatalogs(env = process.env, fetchImpl = globalThis.fetch, readFile) {
+  const out = {};
+  try {
+    if (env.CATALOG_FILE) {
+      const read = readFile ?? (await import('node:fs/promises')).readFile;
+      const file = JSON.parse(await read(env.CATALOG_FILE, 'utf8'));
+      if (file.currency) out[file.currency.toUpperCase()] = file.products ?? [];
+      return out;
+    }
+    if (!env.PUPPET_API_URL) return out;
+    const base = env.PUPPET_API_URL.replace(/\/$/, '');
+    for (const cur of CURRENCIES) {
+      const res = await fetchImpl(`${base}/v1/catalog?currency=${cur}`);
+      if (res.ok) out[cur.toUpperCase()] = (await res.json()).products ?? [];
+    }
+  } catch (error) {
+    console.warn(`[prices] using built-in prices: ${error.message}`);
+  }
+  return out;
+}
+
+const slug = (name) => name.toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/^-|-$/g, '');
+
+/**
+ * The website's price table with staff prices from the catalog laid over it: a plan the catalog
+ * prices in a currency shows that price (per month, from the yearly price when there is one, as
+ * the site says "billed annually"); anything the catalog lacks keeps the built-in number.
+ */
+export function applyCatalogPrices(pricing, byCurrency) {
+  return pricing.map((product) => ({
+    ...product,
+    plans: product.plans.map((plan) => {
+      const prices = { ...plan.prices };
+      for (const [code, products] of Object.entries(byCurrency)) {
+        const live = products
+          .find((p) => p.key === slug(product.product))
+          ?.plans?.find((p) => p.key === slug(plan.name));
+        const of = (interval) =>
+          live?.prices?.find((x) => x.interval === interval && x.currency.toUpperCase() === code);
+        const year = of('year');
+        const month = of('month');
+        const minor = year ? year.unitAmount / 12 : month?.unitAmount;
+        if (minor !== undefined) prices[code] = Math.round(minor) / 100;
+      }
+      return { ...plan, prices };
+    }),
+  }));
 }

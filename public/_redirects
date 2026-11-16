@@ -1,3 +1,7 @@
 # Cloudflare Pages: the legal pages moved under /legal (TSK-062).
 /terms /legal/terms 301
 /privacy /legal/privacy 301
+# One page address per product (product registry, PRD 2.7).
+/tasks /products/tasks 301
+/booking /products/booking 301
+/apps/* /products/:splat 301

@@ -40,8 +40,8 @@ export const keyOf = (name: string) => name.toLowerCase().replace(/[^a-z0-9]+/g,
 export const openLink = (product: string) => `${appUrl}/open/${encodeURIComponent(keyOf(product))}`;
 /** The products with a hand-written page, for the Products listing (apps from the catalog join them). */
 export const builtInProducts = [
-  { key: 'tasks', name: 'Tasks', category: 'Project management', summary: 'Boards, lists and calendar, with GitHub, CI, Slack and Figma built in. Voice notes become tickets, and AI runs on your own key or a free local model.', href: '/tasks' },
-  { key: 'booking', name: 'Booking', category: 'Scheduling', summary: 'Online appointment scheduling with staff schedules, deposits, reminders and AI answers, on a booking page on your own domain.', href: '/booking' },
+  { key: 'tasks', name: 'Tasks', category: 'Project management', summary: 'Boards, lists and calendar, with GitHub, CI, Slack and Figma built in. Voice notes become tickets, and AI runs on your own key or a free local model.', href: '/products/tasks' },
+  { key: 'booking', name: 'Booking', category: 'Scheduling', summary: 'Online appointment scheduling with staff schedules, deposits, reminders and AI answers, on a booking page on your own domain.', href: '/products/booking' },
 ];
 export const signupLink = (product: string, plan: string) =>
   `${links.signup}&product=${encodeURIComponent(keyOf(product))}&plan=${encodeURIComponent(keyOf(plan))}`;

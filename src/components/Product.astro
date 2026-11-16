@@ -6,7 +6,8 @@ import Plans from './Plans.astro';
 import Faqs from './Faqs.astro';
 import { landingFor } from '../lib/catalog';
 import { mergeLanding } from '../lib/landing.mjs';
-import { brand, comparisons, currencies, pricing, links, openLink, trialDays, keyOf, type Feature } from '../data/site';
+import { brand, comparisons, currencies, links, openLink, trialDays, keyOf, type Feature } from '../data/site';
+import { pricing } from '../lib/prices';
 interface Props { name: 'Tasks' | 'Booking'; path: string; title: string; description: string; h1: string; intro: string; category: string; features: Feature[]; extra?: { heading: string; lead: string; items: Feature[] } }
 // The app's own release can replace this copy (manifest `landing`, via the platform catalog).
 const p = { ...Astro.props, ...mergeLanding(Astro.props, landingFor(keyOf(Astro.props.name))) };
