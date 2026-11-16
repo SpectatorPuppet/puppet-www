@@ -14,7 +14,7 @@ export function getStaticPaths() {
 }
 const { product } = Astro.props as { product: CatalogProduct };
 const l = product.landing!;
-const path = `/apps/${product.key}`;
+const path = `/products/${product.key}`;
 const full = `${brand} ${product.name}`;
 const money = (minor: number) => new Intl.NumberFormat('en-US', { style: 'currency', currency: 'USD', maximumFractionDigits: minor % 100 ? 2 : 0 }).format(minor / 100);
 const plans = product.plans.map((plan) => ({ ...plan, monthly: plan.prices.find((x) => x.interval === 'month') })).filter((plan) => plan.monthly);

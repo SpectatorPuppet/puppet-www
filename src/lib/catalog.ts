@@ -22,5 +22,5 @@ export type CatalogProduct = {
 /** Read once per build. */
 export const catalog: CatalogProduct[] = await loadCatalog();
 export const landingFor = (key: string) => catalog.find((p) => p.key === key)?.landing ?? null;
-/** Products with their own hand-written page; the rest get /apps/<key>. */
+/** Products with their own hand-written page; the rest get /products/<key>. */
 export const handWritten = builtInProducts.map((p) => p.key);

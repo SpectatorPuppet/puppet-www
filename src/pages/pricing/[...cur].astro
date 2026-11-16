@@ -3,7 +3,8 @@ import Base from '../../layouts/Base.astro';
 import Plans from '../../components/Plans.astro';
 import Faqs from '../../components/Faqs.astro';
 import Cta from '../../components/Cta.astro';
-import { brand, currencies, pricing, faqs, trialDays, launchOffer, fromPrice, type Currency } from '../../data/site';
+import { brand, currencies, faqs, trialDays, launchOffer, type Currency } from '../../data/site';
+import { pricing, fromPrice } from '../../lib/prices';
 // /pricing is USD; /pricing/eur and /pricing/inr are their own indexable pages.
 export const getStaticPaths = () => currencies.map((c) => ({ params: { cur: c.slug || undefined }, props: { c } }));
 const { c } = Astro.props as { c: Currency };

@@ -1,5 +1,6 @@
 ---
-import { pricing, price, currencies, signupLink, minSeats, trialDays, type Currency } from '../data/site';
+import { currencies, signupLink, minSeats, trialDays, type Currency } from '../data/site';
+import { pricing, price } from '../lib/prices';
 const { product, cur = currencies[0] } = Astro.props as { product: 'Tasks' | 'Booking'; cur?: Currency };
 const p = pricing.find((x) => x.product === product)!;
 ---

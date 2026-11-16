@@ -1,6 +1,6 @@
 import { test } from 'node:test';
 import assert from 'node:assert/strict';
-import { generatedApps, loadCatalog, mergeLanding, productListing } from '../src/lib/landing.mjs';
+import { applyCatalogPrices, generatedApps, loadCatalog, loadCatalogs, mergeLanding, productListing } from '../src/lib/landing.mjs';
 
 const base = { title: 'T', description: 'D', h1: 'H', intro: 'I', category: 'C', features: [{ title: 'a', text: 'b' }] };
 const landing = {
@@ -46,7 +46,32 @@ test('the Products listing keeps hand-written products first, then catalog apps 
   ];
   assert.deepEqual(productListing(builtIn, products), [
     { key: 'tasks', name: 'Tasks', category: 'Project management', summary: 'From the release.', href: '/tasks' },
-    { key: 'notes', name: 'Notes', category: 'Notes', summary: 'Shared notes.', href: '/apps/notes' },
+    { key: 'notes', name: 'Notes', category: 'Notes', summary: 'Shared notes.', href: '/products/notes' },
   ]);
   assert.deepEqual(productListing(builtIn, []), builtIn);
+});
+
+test('staff prices from the catalog replace the built-in ones, per currency', () => {
+  const builtIn = [{ product: 'Tasks', unit: 'per user / month', plans: [
+    { name: 'Basic', prices: { USD: 5, EUR: 5, INR: 199 } },
+    { name: 'BYO key', prices: { USD: 7, EUR: 7, INR: 299 } },
+  ] }];
+  const plans = (cur, basic) => [{ key: 'tasks', plans: [
+    { key: 'basic', prices: [{ interval: 'month', currency: cur, unitAmount: basic * 2 }, { interval: 'year', currency: cur, unitAmount: basic * 12 }] },
+  ] }];
+  const out = applyCatalogPrices(builtIn, { USD: plans('usd', 600), INR: plans('inr', 24900) });
+  assert.deepEqual(out[0].plans[0].prices, { USD: 6, EUR: 5, INR: 249 });
+  assert.deepEqual(out[0].plans[1].prices, { USD: 7, EUR: 7, INR: 299 });
+  assert.deepEqual(applyCatalogPrices(builtIn, {}), builtIn);
+});
+
+test('loads the catalog in each currency, skipping ones that fail', async () => {
+  const seen = [];
+  const fetchImpl = async (url) => {
+    seen.push(url);
+    return url.endsWith('eur') ? { ok: false } : { ok: true, json: async () => ({ products: [{ key: 'tasks' }] }) };
+  };
+  const out = await loadCatalogs({ PUPPET_API_URL: 'https://api.test/' }, fetchImpl);
+  assert.deepEqual(Object.keys(out), ['USD', 'INR']);
+  assert.equal(seen[0], 'https://api.test/v1/catalog?currency=usd');
 });
