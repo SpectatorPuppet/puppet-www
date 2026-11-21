@@ -1,10 +1,214 @@
 ---
-import Product from '../../components/Product.astro';
-import { tasksFeatures, integrations } from '../../data/site';
+// Puppet Tasks landing page: a scroll-animated hero board plus small working demos (views, voice to
+// ticket, the Done gate, ask your board, a seats calculator). Every demo runs in the browser on
+// sample data; nothing is sent anywhere. Without JavaScript, or with reduced motion, the page is
+// static and complete: demos show their finished state and their buttons stay hidden.
+import Base from '../../layouts/Base.astro';
+import Features from '../../components/Features.astro';
+import Faqs from '../../components/Faqs.astro';
+import Cta from '../../components/Cta.astro';
+import { landingFor } from '../../lib/catalog';
+import { mergeLanding } from '../../lib/landing.mjs';
+import { brand, comparisons, currencies, integrations, landingUrl, links, minSeats, openLink, signupLink, tasksFaqs, tasksFeatures, trialDays } from '../../data/site';
+import { pricing, price } from '../../lib/prices';
+
+const base = {
+  name: 'Tasks', path: '/products/tasks', category: 'ProjectManagementApplication', features: tasksFeatures,
+  title: 'Puppet Tasks: Project Management with AI Included',
+  description: 'Boards your team actually finishes: AI writes tickets, CI checks acceptance criteria, GitHub and Slack built in. From $5 per user. 14-day trial.',
+  h1: 'Boards your team actually finishes',
+  intro: 'Talk through the work and AI writes the tickets. CI proves each acceptance criterion before anything is Done. Lighter than ClickUp, with AI in the plan price.',
+};
+// The app's own release can replace this copy (manifest `landing`, via the platform catalog).
+const merged = mergeLanding(base, landingFor('tasks'));
+const p = { ...merged, canonical: merged.canonical ?? landingUrl('tasks'), faqs: merged.faqs.length ? merged.faqs : tasksFaqs };
+const full = `${brand} Tasks`;
+const plans = pricing.find((x) => x.product === 'Tasks')!.plans;
+const ld: object[] = [
+  { '@type': 'SoftwareApplication', name: full, description: p.description, applicationCategory: p.category, operatingSystem: 'Web, iOS, Android, Windows, macOS', offers: plans.flatMap((plan) => currencies.map((c) => ({ '@type': 'Offer', name: plan.name, price: String(plan.prices[c.code]), priceCurrency: c.code }))) },
+  { '@type': 'FAQPage', mainEntity: p.faqs.map((f) => ({ '@type': 'Question', name: f.q, acceptedAnswer: { '@type': 'Answer', text: f.a } })) },
+];
+const seats = 5;
+const money = (n: number, sym: string) => `${sym}${Number.isInteger(n) ? n : n.toFixed(2)}`;
+const priceData = JSON.stringify({ currencies: currencies.map((c) => ({ code: c.code, symbol: c.symbol })), plans: plans.map((plan) => plan.prices), min: minSeats });
+const board = {
+  todo: [{ k: 'PUP-41', t: 'Invite flow for client guests', tag: 'Feature' }, { k: 'PUP-44', t: 'Export board as CSV', tag: 'Chore' }],
+  doing: [{ k: 'PUP-38', t: 'Stripe checkout for annual plans', tag: 'Feature' }],
+  done: [{ k: 'PUP-35', t: 'Fix calendar feed time zones', tag: 'Bug', ok: true }],
+};
+const views = [
+  { id: 'board', label: 'Board' },
+  { id: 'list', label: 'List' },
+  { id: 'cal', label: 'Calendar' },
+];
+const list = [
+  { k: 'PUP-38', t: 'Stripe checkout for annual plans', who: 'AK', due: 'Tue', s: 'In progress' },
+  { k: 'PUP-41', t: 'Invite flow for client guests', who: 'RM', due: 'Wed', s: 'To do' },
+  { k: 'PUP-44', t: 'Export board as CSV', who: 'VB', due: 'Fri', s: 'To do' },
+  { k: 'PUP-35', t: 'Fix calendar feed time zones', who: 'AK', due: 'Mon', s: 'Done' },
+];
+const week = ['Mon', 'Tue', 'Wed', 'Thu', 'Fri'];
+const voices = [
+  { say: 'Clients should be able to approve a release from the portal link, and we get a signed receipt.', title: 'Client approves a release from the portal', crit: ['Given a portal link, when the client opens a release, then they see its tickets and notes', 'Given a release, when the client approves it, then a signed receipt is saved', 'Given an approved release, when the team opens it, then it shows who approved and when'] },
+  { say: 'Add a dark mode toggle to settings and remember it per user.', title: 'Dark mode toggle in settings', crit: ['Given settings, when I switch dark mode on, then the app turns dark at once', 'Given dark mode is on, when I sign in on another device, then it is still on'] },
+  { say: 'The calendar feed shows due dates an hour off after daylight saving changes.', title: 'Calendar feed keeps due dates through DST', crit: ['Given a due date after a DST change, when the feed is read, then the time matches the board', 'Given a team time zone, when it changes, then the feed follows it'] },
+];
+const gate = ['Given an annual plan, when I check out, then Stripe charges the yearly price', 'Given a failed card, when checkout ends, then I see why and can retry', 'Given a paid checkout, when the webhook lands, then the plan is active'];
+const asks = [
+  { q: 'What is blocking the release?', a: 'Two tickets. PUP-38 is waiting on 1 failing test (failed card retry), and PUP-41 has no owner yet.', refs: ['PUP-38', 'PUP-41'] },
+  { q: 'What did we finish this week?', a: 'Four tickets reached Done, all with passing tests. The biggest was PUP-35, the calendar time zone fix.', refs: ['PUP-35'] },
+  { q: 'Who has too much on?', a: 'AK has 3 tickets in progress, more than anyone else. RM has room for one more.', refs: ['PUP-38', 'PUP-35'] },
+];
 ---
-<Product name="Tasks" path="/products/tasks" category="ProjectManagementApplication" features={tasksFeatures}
-  title="Puppet Tasks: Project Management with AI Included"
-  description="Boards your team actually finishes: AI writes tickets, CI checks acceptance criteria, GitHub and Slack built in. From $5 per user. 14-day trial."
-  h1="Boards your team actually finishes"
-  intro="AI writes the tickets, checks the acceptance criteria, and answers questions about your board. Lighter than ClickUp, with AI that does not cost extra per seat."
-  extra={{ heading: 'Works with the tools you already use', lead: 'Connect once per workspace. Secrets are never shown again after you save them.', items: integrations }} />
+<Base title={p.title} description={p.description} path={p.path} ld={ld} crumbs={[[full, p.path]]} canonicalUrl={p.canonical} image={p.image} ownHero>
+<div class="tk-hero" data-tk="hero"><div class="w">
+  <div class="tk-copy">
+    <nav class="crumbs" aria-label="Breadcrumb"><a href="/">Home</a> / <span aria-current="page">{full}</span></nav>
+    <p class="tk-pill"><span class="tk-dot" aria-hidden="true"></span>AI included in every paid plan</p>
+    <h1 data-tk="split">{p.h1}</h1>
+    <p class="tk-intro">{p.intro}</p>
+    <div class="row"><a class="btn" href={links.signup}>Start {trialDays}-day trial</a><a class="btn gh" href={links.tasksDemo}>Try the live demo</a><a class="btn gh" href={openLink('Tasks')}>Log in</a></div>
+    <p class="trust">From <b>{price(plans[0], currencies[0])}</b> per user a month · {trialDays}-day trial · Audio never stored</p>
+  </div>
+  <div class="tk-stage" aria-label="Sample Puppet Tasks board" role="img">
+    <div class="tk-board" data-tk="board">
+      <div class="tk-bar"><i></i><i></i><i></i><span>Website relaunch · Board</span></div>
+      <div class="tk-cols">
+        {(['todo', 'doing', 'done'] as const).map((col) => (
+          <div class="tk-col" data-col={col}><h3>{{ todo: 'To do', doing: 'In progress', done: 'Done' }[col]}<span data-count-col></span></h3>
+            {board[col].map((c) => <div class:list={['tk-card', { ok: 'ok' in c }]} data-card><small>{c.k} · {c.tag}</small><span>{c.t}</span><em aria-hidden="true">3/3 tests</em></div>)}
+          </div>
+        ))}
+      </div>
+    </div>
+    <div class="tk-float tk-voice" data-tk="float" aria-hidden="true"><span class="tk-wave"><i></i><i></i><i></i><i></i><i></i></span>“Add CSV export to the board…”</div>
+    <div class="tk-float tk-ci" data-tk="float" aria-hidden="true"><b>✓</b> CI: 3 of 3 criteria passed</div>
+  </div>
+</div></div>
+
+<div class="tk-strip" aria-label="Works with"><div class="tk-marquee">{[0, 1].map((dup) => <ul aria-hidden={dup ? 'true' : undefined}>{['GitHub', 'GitHub Actions', 'Slack', 'Discord', 'Figma', 'Loom', 'Google Calendar', 'Outlook', 'Apple Calendar', 'Claude (MCP)', 'OpenAI', 'Gemini', 'Ollama'].map((n) => <li>{n}</li>)}</ul>)}</div></div>
+
+<section id="views"><div class="w">
+  <h2 data-tk="reveal">Plan in the view that fits the work</h2>
+  <p class="lead" data-tk="reveal">Same tickets, three ways to see them. Switch views without losing your place.</p>
+  <div class="tk-tabs" role="tablist" aria-label="Views" data-tk="tabs">{views.map((v, i) => <button role="tab" id={`tab-${v.id}`} aria-controls={`panel-${v.id}`} aria-selected={i === 0 ? 'true' : 'false'} tabindex={i === 0 ? 0 : -1}>{v.label}</button>)}<span class="tk-ind" aria-hidden="true"></span></div>
+  <div class="tk-view">
+    <div role="tabpanel" id="panel-board" aria-labelledby="tab-board" tabindex="0" class="tk-vb">{(['todo', 'doing', 'done'] as const).map((col) => <div><h3>{{ todo: 'To do', doing: 'In progress', done: 'Done' }[col]}</h3>{board[col].map((c) => <div class="tk-card"><small>{c.k}</small><span>{c.t}</span></div>)}</div>)}</div>
+    <div role="tabpanel" id="panel-list" aria-labelledby="tab-list" tabindex="0" hidden><div class="tw"><table><thead><tr><th>Key</th><th>Ticket</th><th>Owner</th><th>Due</th><th>Status</th></tr></thead><tbody>{list.map((r) => <tr><td>{r.k}</td><td>{r.t}</td><td><span class="tk-av">{r.who}</span></td><td>{r.due}</td><td><span class:list={['tk-st', { ok: r.s === 'Done' }]}>{r.s}</span></td></tr>)}</tbody></table></div></div>
+    <div role="tabpanel" id="panel-cal" aria-labelledby="tab-cal" tabindex="0" hidden><div class="tk-cal">{week.map((d) => <div><h3>{d}</h3>{list.filter((r) => r.due === d).map((r) => <div class="tk-card"><small>{r.k}</small><span>{r.t}</span></div>)}</div>)}</div></div>
+  </div>
+</div></section>
+
+<section id="voice" class="dark"><div class="w split">
+  <div data-tk="reveal"><h2>Say it. Get a ticket with acceptance criteria.</h2><p class="lead">Talk in any language. Puppet AI drafts the ticket, the subtasks and Given/When/Then criteria, each with a test to write. The audio is deleted once it is transcribed.</p>
+    <div class="tk-chips" data-tk="voice-picks" hidden>{voices.map((v, i) => <button type="button" aria-pressed={i === 0 ? 'true' : 'false'} data-i={i}>{v.title}</button>)}</div>
+  </div>
+  <div class="tk-demo" data-tk="voice" data-voices={JSON.stringify(voices)}>
+    <div class="tk-mic"><button type="button" class="btn" data-act="speak" hidden>● Speak</button><span class="tk-wave" aria-hidden="true"><i></i><i></i><i></i><i></i><i></i></span><span class="ph" data-out="state">Sample voice note</span></div>
+    <p class="tk-say" data-out="say">“{voices[0].say}”</p>
+    <div class="tk-ticket" data-out="ticket" aria-live="polite"><small>New ticket · drafted by Puppet AI</small><h3 data-out="title">{voices[0].title}</h3><ol data-out="crit">{voices[0].crit.map((c) => <li>{c}</li>)}</ol></div>
+  </div>
+</div></section>
+
+<section id="done"><div class="w split">
+  <div class="tk-demo tk-light" data-tk="gate">
+    <small class="ph">PUP-38 · Stripe checkout for annual plans</small>
+    <ul class="tk-gate">{gate.map((g) => <li data-crit><span class="tk-tick" aria-hidden="true"></span><span>{g}</span><em>passing</em></li>)}</ul>
+    <div class="row"><button type="button" class="btn gh" data-act="ci" hidden>Run CI</button><button type="button" class="btn" data-act="done" hidden>Move to Done</button><button type="button" class="btn gh" data-act="reset" hidden>Reset</button></div>
+    <p class="tk-msg" data-out="msg" aria-live="polite">All 3 criteria have a passing test, so this ticket can move to Done.</p>
+  </div>
+  <div data-tk="reveal"><h2>Done means tested. Every time.</h2><p class="lead">A ticket can only move to Done when every acceptance criterion has a passing test from your CI run, and every subtask is finished. Try moving this one before the tests pass.</p><ul><li>JUnit XML or JSON from any CI</li><li>Signed test result webhook per workspace</li><li>A proof-of-delivery report for clients</li></ul></div>
+</div></section>
+
+<section id="ask" class="dark"><div class="w split">
+  <div data-tk="reveal"><h2>Ask your board anything</h2><p class="lead">Plain questions, answers grounded in your own tickets, with links to each one. Works with built-in AI, your own key, or a free local model.</p></div>
+  <div class="tk-demo" data-tk="ask" data-asks={JSON.stringify(asks)}>
+    <div class="tk-chips" hidden data-tk="ask-picks">{asks.map((a, i) => <button type="button" aria-pressed={i === 0 ? 'true' : 'false'} data-i={i}>{a.q}</button>)}</div>
+    <p class="tk-q" data-out="q">{asks[0].q}</p>
+    <p class="tk-a" data-out="a" aria-live="polite">{asks[0].a}</p>
+    <p class="tk-refs" data-out="refs">{asks[0].refs.map((r) => <span>{r}</span>)}</p>
+  </div>
+</div></section>
+
+<section><div class="w"><h2 data-tk="reveal">What you get with {full}</h2><div data-tk="stagger"><Features items={p.features} /></div></div></section>
+<section style="background:#fff"><div class="w"><h2 data-tk="reveal">Works with the tools you already use</h2><p class="lead">Connect once per workspace. Secrets are never shown again after you save them.</p><div data-tk="stagger"><Features items={integrations} /></div></div></section>
+<section><div class="w"><h2>{full} compared</h2><div class="g" data-tk="stagger">{comparisons.filter((c) => c.product === 'Tasks').map((c) => <article class="c"><h3>{full} vs {c.name}</h3><p>{c.summary}</p><a class="more" href={`/compare/${c.slug}`}>Read the comparison →</a></article>)}</div></div></section>
+
+<section class="pr" id="pricing" style="background:#fff"><div class="w" data-tk="price" data-prices={priceData}>
+  <h2>{full} pricing</h2>
+  <div class="tk-calc" hidden data-tk="calc">
+    <div class="tk-seg" role="radiogroup" aria-label="Currency">{currencies.map((c, i) => <button type="button" role="radio" aria-checked={i === 0 ? 'true' : 'false'} data-cur={i}>{c.symbol} {c.code}</button>)}</div>
+    <label class="tk-seats">Team size: <b data-out="seats">{seats}</b> users<input type="range" min={minSeats} max="50" value={seats} data-in="seats" aria-label="Team size in users"></label>
+  </div>
+  <div class="g">{plans.map((plan, i) => (
+    <div class:list={['c', { hot: plan.hot }]}><h3>{plan.name}</h3><div class="price"><span data-out={`price-${i}`}>{price(plan, currencies[0])}</span><small> per user / month</small></div>
+      <p class="tk-total" data-out={`total-${i}`}>{money(plan.prices.USD * seats, '$')} a month for {seats} users</p><p>{plan.blurb}</p><ul>{plan.features.map((f) => <li>{f}</li>)}</ul>
+      <a class={plan.hot ? 'btn' : 'btn gh'} style={plan.hot ? '' : 'color:#2A2A2A;border-color:#2A2A2A'} href={signupLink('Tasks', plan.name)}>Start {trialDays}-day trial</a></div>
+  ))}</div>
+  <p class="ph">Billed annually; monthly billing is about 20% more. Minimum {minSeats} seats. <a href="/pricing">All prices →</a></p>
+</div></section>
+
+<section id="faq"><div class="w" style="max-width:820px"><h2>{full} questions</h2><Faqs items={p.faqs} /></div></section>
+<Cta />
+</Base>
+
+<script>
+  import { start } from '../../scripts/tasks';
+  start();
+</script>
+
+<style is:global>
+.tk-hero{background:var(--ch);color:#fff;overflow:hidden;position:relative}
+.tk-hero:before{content:"";position:absolute;inset:auto -10% -40% 40%;height:80%;background:radial-gradient(closest-side,rgb(225 6 0/.28),transparent);pointer-events:none}
+.tk-hero .w{display:grid;grid-template-columns:1fr 1.05fr;gap:48px;align-items:center;padding:56px 20px 88px;position:relative}
+.tk-hero h1{font-size:clamp(38px,5.6vw,66px);letter-spacing:-.02em}.tk-intro{color:var(--si);font-size:19px;max-width:32em}
+.tk-pill{display:inline-flex;gap:8px;align-items:center;border:1px solid #4a4a4a;border-radius:99px;padding:4px 12px;font-size:13px;color:var(--si);margin:0 0 16px}
+.tk-dot{width:8px;height:8px;border-radius:50%;background:var(--red);box-shadow:0 0 0 0 rgb(225 6 0/.6);animation:tk-ping 2s infinite}
+@keyframes tk-ping{70%{box-shadow:0 0 0 8px rgb(225 6 0/0)}100%{box-shadow:0 0 0 0 rgb(225 6 0/0)}}
+.tk-stage{position:relative;perspective:1200px}
+.tk-board{background:#F6F6F4;color:var(--ch);border-radius:16px;box-shadow:0 30px 80px -20px rgb(0 0 0/.6),0 0 0 1px rgb(255 255 255/.08);overflow:hidden;transform-origin:50% 100%}
+.tk-bar{display:flex;gap:6px;align-items:center;background:#fff;padding:10px 14px;border-bottom:1px solid #e6e6e6;font-size:12px;color:var(--mu)}.tk-bar i{width:10px;height:10px;border-radius:50%;background:#ddd}.tk-bar i:first-child{background:var(--red)}.tk-bar span{margin-left:8px}
+.tk-cols{display:grid;grid-template-columns:repeat(3,1fr);gap:10px;padding:14px;min-height:300px}
+.tk-col{background:#ececea;border-radius:10px;padding:8px;display:flex;flex-direction:column;gap:8px}
+.tk-col h3,.tk-vb h3,.tk-cal h3{font:600 12px Inter,system-ui,sans-serif;color:var(--mu);margin:2px 4px;display:flex;justify-content:space-between;text-transform:uppercase;letter-spacing:.04em}
+.tk-card{background:#fff;border-radius:8px;padding:10px;border:1px solid #e2e2e2;font-size:13px;line-height:1.35;display:grid;gap:4px;box-shadow:0 1px 2px rgb(0 0 0/.05)}
+.tk-card small{color:var(--mu);font-size:11px}.tk-card em{display:none;font-style:normal;font-size:11px;color:#127a3a;font-weight:600}
+.tk-col[data-col=done] .tk-card{border-left:3px solid #1f9d55}.tk-col[data-col=done] .tk-card em{display:block}.tk-col[data-col=doing] .tk-card{border-left:3px solid var(--red)}
+.tk-float{position:absolute;background:#fff;color:var(--ch);border-radius:12px;padding:10px 14px;font-size:13px;box-shadow:0 18px 40px -12px rgb(0 0 0/.5);display:flex;gap:8px;align-items:center}
+.tk-voice{left:-28px;bottom:36px;max-width:250px}.tk-ci{right:-16px;top:-14px}.tk-ci b{color:#fff;background:#1f9d55;border-radius:50%;width:20px;height:20px;display:grid;place-items:center;font-size:12px}
+.tk-wave{display:inline-flex;gap:3px;align-items:center;height:18px}.tk-wave i{width:3px;height:6px;background:var(--red);border-radius:2px}
+.tk-strip{background:#fff;border-bottom:1px solid #e6e6e6;overflow:hidden;padding:18px 0;-webkit-mask:linear-gradient(90deg,transparent,#000 10%,#000 90%,transparent);mask:linear-gradient(90deg,transparent,#000 10%,#000 90%,transparent)}
+.tk-marquee{display:flex;width:max-content}.tk-marquee ul{display:flex;gap:44px;list-style:none;margin:0;padding:0 22px;font:600 17px Archivo,sans-serif;color:#8a8a8a;white-space:nowrap}
+@media (prefers-reduced-motion:no-preference){.tk-marquee{animation:tk-slide 38s linear infinite}.tk-strip:hover .tk-marquee{animation-play-state:paused}.tk-wave i{animation:tk-bar 1s ease-in-out infinite}.tk-wave i:nth-child(2){animation-delay:.15s}.tk-wave i:nth-child(3){animation-delay:.3s}.tk-wave i:nth-child(4){animation-delay:.45s}.tk-wave i:nth-child(5){animation-delay:.6s}}
+@media (prefers-reduced-motion:reduce){.tk-dot{animation:none}}
+@keyframes tk-slide{to{transform:translateX(-50%)}}@keyframes tk-bar{50%{height:18px}}
+.tk-tabs{position:relative;display:inline-flex;background:#e9e9e6;border-radius:10px;padding:4px;margin-bottom:20px}
+.tk-tabs button{position:relative;z-index:1;border:0;background:none;font:600 15px Inter,system-ui,sans-serif;padding:10px 20px;border-radius:8px;cursor:pointer;color:var(--mu);min-height:44px}.tk-tabs button[aria-selected=true]{color:var(--ch)}
+.tk-ind{position:absolute;top:4px;bottom:4px;left:4px;width:0;background:#fff;border-radius:8px;box-shadow:0 1px 3px rgb(0 0 0/.12);transition:transform .3s var(--ease),width .3s var(--ease)}
+.tk-view{background:#fff;border:1px solid #e2e2e2;border-radius:16px;padding:18px;min-height:280px}
+.tk-vb,.tk-cal{display:grid;grid-template-columns:repeat(3,1fr);gap:12px}.tk-cal{grid-template-columns:repeat(5,1fr)}.tk-vb>div,.tk-cal>div{background:#f3f3f1;border-radius:10px;padding:8px;display:grid;gap:8px;align-content:start}
+.tk-av{display:inline-grid;place-items:center;width:28px;height:28px;border-radius:50%;background:var(--ch);color:#fff;font-size:11px;font-weight:600}
+.tk-st{font-size:12px;padding:2px 8px;border-radius:99px;background:#efefed}.tk-st.ok{background:#e3f4ea;color:#127a3a}
+.tk-demo{background:#333;border:1px solid #444;border-radius:16px;padding:22px;display:grid;gap:14px}.tk-light{background:#fff;border-color:#e2e2e2}
+.tk-mic{display:flex;gap:12px;align-items:center}.dark .ph{color:var(--si)}.tk-mic .tk-wave{opacity:.3}.tk-mic.on .tk-wave{opacity:1}
+.tk-say{font-size:17px;color:#fff;margin:0;min-height:3.2em}
+.tk-ticket{background:#fff;color:var(--ch);border-radius:12px;padding:16px;border-left:4px solid var(--red)}.tk-ticket small{color:var(--mu)}.tk-ticket h3{font-size:18px;margin:4px 0 8px}.tk-ticket ol{margin:0;padding-left:20px;color:var(--mu);font-size:14px}.tk-ticket li{margin:4px 0}
+.tk-chips{display:flex;flex-wrap:wrap;gap:8px}.tk-chips button{background:transparent;color:var(--si);border:1px solid #555;border-radius:99px;padding:8px 14px;font:500 14px Inter,system-ui,sans-serif;cursor:pointer;min-height:40px}.tk-chips button[aria-pressed=true]{background:#fff;color:var(--ch);border-color:#fff}
+.split .tk-gate{list-style:none;margin:0;padding:0;display:grid;gap:8px}.tk-gate li{display:grid;grid-template-columns:22px 1fr auto;gap:10px;align-items:start;padding:10px;border:1px solid #e6e6e6;border-radius:10px;font-size:14px}
+.tk-gate em{font-style:normal;font-size:12px;font-weight:600;color:#127a3a;background:#e3f4ea;padding:2px 8px;border-radius:99px}.tk-gate li.no em{color:#8a1d1a;background:#fde7e6}
+.tk-tick{width:20px;height:20px;border-radius:50%;background:#1f9d55;position:relative}.tk-tick:after{content:"";position:absolute;left:7px;top:4px;width:5px;height:9px;border:solid #fff;border-width:0 2px 2px 0;transform:rotate(45deg)}.tk-gate li.no .tk-tick{background:#ddd}.tk-gate li.no .tk-tick:after{display:none}
+.tk-gate li.run .tk-tick{background:conic-gradient(var(--red) 30%,#ddd 0);animation:tk-spin .8s linear infinite}@keyframes tk-spin{to{transform:rotate(1turn)}}
+.tk-msg{margin:0;font-size:14px;color:var(--mu);min-height:2.6em}.tk-msg.err{color:#b3130e;font-weight:600}.tk-msg.ok{color:#127a3a;font-weight:600}
+.tk-shake{animation:tk-shake .4s}@keyframes tk-shake{25%{transform:translateX(-6px)}75%{transform:translateX(6px)}}
+.tk-q{margin:0;align-self:end;justify-self:end;background:var(--red);color:#fff;border-radius:14px 14px 4px 14px;padding:10px 14px;max-width:85%}
+.tk-a{margin:0;background:#fff;color:var(--ch);border-radius:14px 14px 14px 4px;padding:12px 14px;min-height:3.4em}
+.tk-refs{margin:0;display:flex;gap:6px}.tk-refs span{font-size:12px;border:1px solid #555;border-radius:6px;padding:2px 8px;color:var(--si)}
+.tk-calc{display:flex;flex-wrap:wrap;gap:20px 32px;align-items:center;margin:8px 0 24px}
+.tk-seg{display:inline-flex;background:#efefed;border-radius:10px;padding:4px}.tk-seg button{border:0;background:none;font:600 14px Inter,system-ui,sans-serif;padding:8px 14px;border-radius:8px;cursor:pointer;min-height:40px;color:var(--mu)}.tk-seg button[aria-checked=true]{background:#fff;color:var(--ch);box-shadow:0 1px 3px rgb(0 0 0/.12)}
+.tk-seats{display:flex;align-items:center;gap:12px;font-size:15px;flex-wrap:wrap}.tk-seats input{width:220px;accent-color:#E10600}
+.tk-total{font-size:14px;font-weight:600;color:var(--ch)!important;margin:4px 0 8px!important}
+button.btn{border:0;font:600 15px Inter,system-ui,sans-serif;cursor:pointer;white-space:nowrap}button.btn.gh{border:1px solid var(--si)}button.btn:disabled{opacity:.5;cursor:default}
+.tk-light .gh{color:var(--ch)!important;border-color:var(--ch)!important}
+@media (max-width:860px){.tk-hero .w{grid-template-columns:1fr;padding:40px 20px 64px}.tk-voice{left:8px;bottom:-22px}.tk-ci{right:8px}.tk-cal{grid-template-columns:repeat(5,minmax(120px,1fr));overflow-x:auto}}
+@media (max-width:560px){.tk-cols{grid-template-columns:repeat(3,minmax(0,1fr));gap:6px;padding:8px;min-height:240px}.tk-col{padding:5px}.tk-card{padding:7px;font-size:11.5px}.tk-card small{font-size:10px}.tk-vb{grid-template-columns:1fr}.tk-tabs{display:flex}.tk-tabs button{flex:1;padding:10px}.tk-seats input{width:100%}.tk-hero .row .btn{flex:1 1 100%}}
+</style>
