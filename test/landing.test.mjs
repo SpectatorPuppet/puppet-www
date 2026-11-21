@@ -45,10 +45,23 @@ test('the Products listing keeps hand-written products first, then catalog apps 
     { key: 'bare', name: 'Bare', landing: null },
   ];
   assert.deepEqual(productListing(builtIn, products), [
-    { key: 'tasks', name: 'Tasks', category: 'Project management', summary: 'From the release.', href: '/tasks' },
-    { key: 'notes', name: 'Notes', category: 'Notes', summary: 'Shared notes.', href: '/products/notes' },
+    { key: 'tasks', name: 'Tasks', category: 'Project management', summary: 'From the release.', href: '/tasks', external: false },
+    { key: 'notes', name: 'Notes', category: 'Notes', summary: 'Shared notes.', href: '/products/notes', external: false },
   ]);
-  assert.deepEqual(productListing(builtIn, []), builtIn);
+  assert.deepEqual(productListing(builtIn, []), builtIn.map((b) => ({ ...b, external: false })));
+});
+
+test('a product with its own landing address opens there (new tab), the app release first', () => {
+  const builtIn = [
+    { key: 'tasks', name: 'Tasks', category: '', summary: 'x', href: '/products/tasks', landingUrl: 'https://tasks.example' },
+    { key: 'booking', name: 'Booking', category: '', summary: 'y', href: '/products/booking' },
+  ];
+  const products = [
+    { key: 'booking', name: 'Booking', landing: { summary: 'y', url: 'https://booking.example/' } },
+    { key: 'notes', name: 'Notes', landing: { summary: 'z', url: 'https://notes.example/' } },
+  ];
+  const out = productListing(builtIn, products);
+  assert.deepEqual(out.map((p) => [p.href, p.external]), [['https://tasks.example', true], ['https://booking.example/', true], ['https://notes.example/', true]]);
 });
 
 test('staff prices from the catalog replace the built-in ones, per currency', () => {

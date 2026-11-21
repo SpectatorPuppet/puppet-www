@@ -1,6 +1,6 @@
 ---
 // Every Puppet product in one list: search by name or what it does, as cards or a list.
-// Each one opens its own landing page; "Log in" goes through the portal, which opens the app
+// Each one opens its own landing page (on its own subdomain, in a new tab, once that is set); "Log in" goes through the portal, which opens the app
 // for people with access and shows the plans to everyone else.
 import Base from '../layouts/Base.astro';
 import Cta from '../components/Cta.astro';
@@ -20,8 +20,8 @@ const ld = [{ '@type': 'ItemList', itemListElement: products.map((p, i) => ({ '@
 <p class="count" aria-live="polite" data-count>{products.length} products</p>
 <ul class="items" data-items>
 {products.map((p) => <li class="c" data-text={`${p.name} ${p.category} ${p.summary}`.toLowerCase()}>
-<div class="tx"><h2><a href={p.href}>{brand} {p.name}</a></h2>{p.category && <p class="cat">{p.category}</p>}<p>{p.summary}</p></div>
-<div class="acts"><a class="btn" href={p.href} aria-label={`About ${brand} ${p.name}`}>Learn more</a><a class="btn gh" href={openLink(p.key)} aria-label={`Log in to ${brand} ${p.name}`}>Log in</a></div>
+<div class="tx"><h2><a href={p.href} {...(p.external ? { target: '_blank', rel: 'noopener' } : {})}>{brand} {p.name}</a></h2>{p.category && <p class="cat">{p.category}</p>}<p>{p.summary}</p></div>
+<div class="acts"><a class="btn" href={p.href} {...(p.external ? { target: '_blank', rel: 'noopener' } : {})} aria-label={`About ${brand} ${p.name}${p.external ? ' (opens in a new tab)' : ''}`}>Learn more</a><a class="btn gh" href={openLink(p.key)} aria-label={`Log in to ${brand} ${p.name}`}>Log in</a></div>
 </li>)}
 </ul>
 <p class="none" hidden data-none>No products match. Try another word, or <a href="/roadmap">see what's coming</a>.</p>

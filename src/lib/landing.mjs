@@ -53,14 +53,17 @@ export function productListing(builtIn, products) {
   return [
     ...builtIn.map((b) => {
       const l = landingOf(b.key);
-      return { ...b, summary: l?.summary || b.summary, category: l?.category || b.category };
+      // The app's own landing address (manifest `landing.url`) wins, then the site setting.
+      const own = l?.url || b.landingUrl;
+      return { ...b, summary: l?.summary || b.summary, category: l?.category || b.category, href: own || b.href, external: Boolean(own) };
     }),
     ...generatedApps(products, handWritten).map((p) => ({
       key: p.key,
       name: p.name,
       category: p.landing.category ?? '',
       summary: p.landing.summary,
-      href: `/products/${p.key}`,
+      href: p.landing.url || `/products/${p.key}`,
+      external: Boolean(p.landing.url),
     })),
   ];
 }

@@ -38,10 +38,16 @@ export const keyOf = (name: string) => name.toLowerCase().replace(/[^a-z0-9]+/g,
  * access, or shows that product's plans in their organization so they can buy it.
  */
 export const openLink = (product: string) => `${appUrl}/open/${encodeURIComponent(keyOf(product))}`;
+/**
+ * Where a product's landing page lives on its own subdomain, e.g. https://tasks.<domain>. Set
+ * TASKS_LANDING_URL / BOOKING_LANDING_URL once the domain points there; the Products list then opens
+ * it in a new tab and the page names it as canonical. Unset, the page stays at /products/<key>.
+ */
+export const landingUrl = (key: string) => process.env[`${key.toUpperCase().replace(/-/g, '_')}_LANDING_URL`]?.replace(/\/$/, '') || undefined;
 /** The products with a hand-written page, for the Products listing (apps from the catalog join them). */
 export const builtInProducts = [
-  { key: 'tasks', name: 'Tasks', category: 'Project management', summary: 'Boards, lists and calendar, with GitHub, CI, Slack and Figma built in. Voice notes become tickets, and AI runs on your own key or a free local model.', href: '/products/tasks' },
-  { key: 'booking', name: 'Booking', category: 'Scheduling', summary: 'Online appointment scheduling with staff schedules, deposits, reminders and AI answers, on a booking page on your own domain.', href: '/products/booking' },
+  { key: 'tasks', name: 'Tasks', landingUrl: landingUrl('tasks'), category: 'Project management', summary: 'Boards, lists and calendar, with GitHub, CI, Slack and Figma built in. Voice notes become tickets, and AI runs on your own key or a free local model.', href: '/products/tasks' },
+  { key: 'booking', name: 'Booking', landingUrl: landingUrl('booking'), category: 'Scheduling', summary: 'Online appointment scheduling with staff schedules, deposits, reminders and AI answers, on a booking page on your own domain.', href: '/products/booking' },
 ];
 export const signupLink = (product: string, plan: string) =>
   `${links.signup}&product=${encodeURIComponent(keyOf(product))}&plan=${encodeURIComponent(keyOf(plan))}`;
@@ -84,6 +90,14 @@ export const integrations: Feature[] = [
   { title: 'Figma, Loom and Docs', text: 'Paste a link and it shows as a rich preview on the ticket.' },
   { title: 'Calendar feed', text: 'Due dates in Google Calendar, Outlook or Apple Calendar.' },
   { title: 'Claude and MCP', text: 'Let Claude or any MCP client read and update your board, with your permissions.' },
+];
+/** Questions on the Tasks page (the app's own release can replace them through its manifest `landing`). */
+export const tasksFaqs: Faq[] = [
+  { q: 'How does the Done gate work?', a: 'Each ticket has Given/When/Then acceptance criteria. Your CI posts test results, and a ticket can only move to Done once every criterion has a passing test and every subtask is done.' },
+  { q: 'Do you keep my voice notes?', a: 'No. Audio is deleted as soon as it is transcribed. Only the text and the tickets drafted from it are kept.' },
+  { q: 'Which AI does Tasks use?', a: 'Pro includes built-in AI. On BYO key you connect Claude, OpenAI, Gemini or a local model with Ollama, and pay your provider directly. Basic has no AI.' },
+  { q: 'Can clients see the board?', a: 'Invite clients as guests who see only what you share, or send a client portal link with releases and sign-off. Neither needs a paid seat.' },
+  { q: 'Is there a free trial?', a: `Yes. Every plan starts with a ${trialDays}-day trial with every feature on, and a live demo runs in your browser with no sign-up.` },
 ];
 export const bookingFeatures: Feature[] = [
   { title: 'Booking page on your domain', text: 'Customers book in a few taps on booking.yourbrand.com, in your colors.' },
