@@ -4,12 +4,26 @@ on:
   # A merge into dev isn't tested again: its pull request already was.
   pull_request:
     branches: [main, dev]
+    # labeled: adding the run-ci label starts CI on a pull request into dev.
+    types: [opened, synchronize, reopened, labeled]
   push:
     branches: [main]
 
 permissions: { contents: read }
+concurrency:
+  # Adding some other label must not cancel a run in progress, so that run gets its own group.
+  group: ci-${{ github.ref }}${{ github.event.action == 'labeled' && github.event.label.name != 'run-ci' && format('-{0}', github.run_id) || '' }}
+  cancel-in-progress: true
+
 jobs:
   test:
+    # Actions minutes: a pull request into dev runs CI only with the run-ci label (run
+    # `./puppet check` locally instead); into main, pushes to main and manual runs always do.
+    if: >-
+      github.event_name != 'pull_request' ||
+      (github.event.action == 'labeled' && github.event.label.name == 'run-ci') ||
+      (github.event.action != 'labeled' &&
+        (github.base_ref == 'main' || contains(github.event.pull_request.labels.*.name, 'run-ci')))
     runs-on: ${{ vars.CI_SELF_HOSTED_RUNNER || 'ubuntu-latest' }}
     steps:
       - uses: actions/checkout@v4
